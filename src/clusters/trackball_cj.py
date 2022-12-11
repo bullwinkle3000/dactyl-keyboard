@@ -1,7 +1,8 @@
 from clusters.trackball_orbyl import TrackballOrbyl
-import math
 import json
 import os
+
+import numpy as np
 
 
 class TrackballCJ(TrackballOrbyl):
@@ -47,7 +48,7 @@ class TrackballCJ(TrackballOrbyl):
         i = (i + 1) % 8
 
         r = radius
-        m = radius * math.tan(math.pi / 8)
+        m = radius * np.tan(np.pi / 8)
 
         points_x = [m, r, r, m, -m, -r, -r, -m]
         points_y = [r, m, -m, -r, -r, -m, m, r]

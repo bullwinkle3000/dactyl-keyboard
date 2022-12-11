@@ -1,5 +1,4 @@
 import numpy as np
-from numpy import pi
 import os.path as path
 import getopt, sys
 import json
@@ -14,14 +13,6 @@ from clusters.trackball_wilder import TrackballWild
 from clusters.trackball_cj import TrackballCJ
 from clusters.custom_cluster import CustomCluster
 from clusters.trackball_btu import TrackballBTU
-
-
-def deg2rad(degrees: float) -> float:
-    return degrees * pi / 180
-
-
-def rad2deg(rad: float) -> float:
-    return rad * 180 / pi
 
 
 debug_exports = False
@@ -570,12 +561,12 @@ def make_dactyl():
 
     def x_rot(shape, angle):
         # debugprint('x_rot()')
-        return rotate(shape, [rad2deg(angle), 0, 0])
+        return rotate(shape, [np.rad2deg(angle), 0, 0])
 
 
     def y_rot(shape, angle):
         # debugprint('y_rot()')
-        return rotate(shape, [0, rad2deg(angle), 0])
+        return rotate(shape, [0, np.rad2deg(angle), 0])
 
 
     def key_place(shape, column, row):
@@ -1256,7 +1247,7 @@ def make_dactyl():
 
         angle_x = np.arctan2(base_pt1[2] - base_pt2[2], base_pt1[1] - base_pt2[1])
         angle_z = np.arctan2(base_pt1[0] - base_pt2[0], base_pt1[1] - base_pt2[1])
-        tbiw_mount_rotation_xyz = (rad2deg(angle_x), 0, rad2deg(angle_z)) + np.array(tbiw_rotation_offset)
+        tbiw_mount_rotation_xyz = (np.rad2deg(angle_x), 0, np.rad2deg(angle_z)) + np.array(tbiw_rotation_offset)
 
         return tbiw_mount_location_xyz, tbiw_mount_rotation_xyz
 
@@ -1301,11 +1292,9 @@ def make_dactyl():
             angle_x = np.arctan2(base_pt1[2] - base_pt2[2], base_pt1[1] - base_pt2[1])
             angle_z = np.arctan2(base_pt1[0] - base_pt2[0], base_pt1[1] - base_pt2[1])
             if trackball_in_wall and (side == ball_side or ball_side == 'both'):
-                # oled_mount_rotation_xyz = (0, rad2deg(angle_x), -rad2deg(angle_z)-90) + np.array(oled_rotation_offset)
-                # oled_mount_rotation_xyz = (rad2deg(angle_x)*.707, rad2deg(angle_x)*.707, -45) + np.array(oled_rotation_offset)
-                oled_mount_rotation_xyz = (0, rad2deg(angle_x), -90) + np.array(_oled_rotation_offset)
+                oled_mount_rotation_xyz = (0, np.rad2deg(angle_x), -90) + np.array(_oled_rotation_offset)
             else:
-                oled_mount_rotation_xyz = (rad2deg(angle_x), 0, -rad2deg(angle_z)) + np.array(_oled_rotation_offset)
+                oled_mount_rotation_xyz = (np.rad2deg(angle_x), 0, -np.rad2deg(angle_z)) + np.array(_oled_rotation_offset)
 
         return oled_mount_location_xyz, oled_mount_rotation_xyz
 
