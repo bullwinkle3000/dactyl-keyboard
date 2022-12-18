@@ -25,6 +25,7 @@ shape_config = {
     "logo_file": None,
     'show_caps': True,
     'show_pcbs': False, #only runs if caps are shown, easist place to initially inject geometry
+    'resin': False,
 
     'nrows':  5, #5,  # key rows
     'ncols':  6, #6,  # key columns
@@ -436,7 +437,7 @@ def save_config():
 
     # Write the config to ./configs/<config_name>.json
     if got_opts:
-        with open(os.path.join(r"..", "configs", shape_config['config_name'] + '.json'), mode='w') as fid:
+        with open(os.path.join(r".", "configs", shape_config['config_name'] + '.json'), mode='w') as fid:
             json.dump(shape_config, fid, indent=4)
 
     else:
