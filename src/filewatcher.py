@@ -41,9 +41,9 @@ class FileWatcher(object):
             except: 
                 print('Unhandled error: %s' % sys.exc_info()[0])
 
-# # Call this function each time a change happens
-def custom_action(text):
-    print(text)
+# # Example usage ##
+# def custom_action(text):
+#     print(text)
 
 # watch_file = 'my_file.txt'
 
