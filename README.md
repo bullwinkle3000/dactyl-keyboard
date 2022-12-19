@@ -257,6 +257,7 @@ You can install the application in a regular python environment, but it is not r
   * autoloader will also take in `--config` argument. Example:
     * `python src/autoloader.py --config test_config`
     * Will generate new configuration file in /configs folder (if it does not exist) and keep an eye out for changes in that file
+    * Models will be generated in a folder of the same name as given argument in root of dactyl_keyboard directory
 * This will regenerate the `things/` files (or in subdirectory if defined in config)
     * `*left.*`
     * `*right.*`
