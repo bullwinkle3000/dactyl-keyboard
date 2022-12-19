@@ -253,6 +253,10 @@ You can install the application in a regular python environment, but it is not r
 * ~~Run `python dactyl_manuform.py` or `python3 dactyl_manuform.py`~~
 * Run `generate_configuration.py` or directly edit `run_config.json` to configure the design
 * Run `dactyl_manuform.py` to create the geometry (ENGINE variable in run determines method)
+  * Alternatively, running `src/autoloader.py` will keep an eye out for changes in the run_config.json and re-run generation automatically
+  * autoloader will also take in `--config` argument. Example:
+    * `python src/autoloader.py --config test_config`
+    * Will generate new configuration file in /configs folder (if it does not exist) and keep an eye out for changes in that file
 * This will regenerate the `things/` files (or in subdirectory if defined in config)
     * `*left.*`
     * `*right.*`
