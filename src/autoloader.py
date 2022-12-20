@@ -48,7 +48,7 @@ def trigger_dactyl(custom, config):
     else:
         os.system(f'python src/dactyl_manuform.py')
 
-    print("Changed detected, dactyl has been re-generated!")
+    print("Changes detected, dactyl has been re-generated!")
 
 def main():
     global got_opts
