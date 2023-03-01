@@ -1,6 +1,6 @@
 from helpers_cadquery import *
 import os.path as path
-import numpy
+import numpy as np
 
 ball_diam = 34  # ball diameter
 ball_space = 2.0  # additional room around ball in socket, 1mm
@@ -50,8 +50,8 @@ def gen_holder():
 
 
 def coords(angle, dist):
-    x = numpy.sin(angle) * dist
-    y = numpy.cos(angle) * dist
+    x = np.sin(angle) * dist
+    y = np.cos(angle) * dist
     return x, y
 
 
@@ -66,7 +66,7 @@ def gen_socket_shape(radius, wall):
 
 
 def socket_bearing_fin(outer_r, outer_depth, axle_r, axle_depth, cut_offset, groove):
-    pi3 = (numpy.pi / 2)
+    pi3 = (np.pi / 2)
     l = 20
 
     x, y = coords(0, l)
