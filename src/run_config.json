@@ -345,5 +345,6 @@
     ]
   ],
   "layouts": null,
-  "polydactyl": false
+  "polydactyl": false,
+  "render_png": false
 }

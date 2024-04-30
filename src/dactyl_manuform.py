@@ -16,13 +16,17 @@ from clusters.mini import MiniCluster
 from clusters.minidox import MinidoxCluster
 from clusters.minithicc import Minithicc
 from clusters.minithicc3 import Minithicc3
+from clusters.minithicc1 import Minithicc1
 from clusters.trackball_orbyl import TrackballOrbyl
+from clusters.trackball_two import TrackballTwo
 from clusters.trackball_orbyl5 import TrackballOrbyl5
 from clusters.trackball_wilder import TrackballWild
 from clusters.trackball_three import TrackballThree
 from clusters.trackball_cj import TrackballCJ
 from clusters.custom_cluster import CustomCluster
 from clusters.trackball_btu import TrackballBTU
+from clusters.trackball_one import TrackballOne
+
 from json_loader import load_json
 
 from os import path
@@ -2658,7 +2662,7 @@ def make_dactyl():
             # export_file(shape=union((oled_clip_mount_frame()[1], oled_clip())),
             #             fname=path.join(save_path, config_name + r"_oled_clip_assy_test"))
 
-        if ENGINE != "cadquery":
+        if ENGINE != "cadquery" and render_png:
             render_samples(overrides_name, ncols, save_path)
 
     all_merged = locals().copy()
@@ -2676,6 +2680,8 @@ def make_dactyl():
             clust = Minithicc(all_merged)
         elif style == Minithicc3.name():
             clust = Minithicc3(all_merged)
+        elif style == Minithicc1.name():
+            clust = Minithicc1(all_merged)
         elif style == TrackballOrbyl.name():
             clust = TrackballOrbyl(all_merged)
         elif style == TrackballOrbyl5.name():
@@ -2684,6 +2690,10 @@ def make_dactyl():
             clust = TrackballWild(all_merged)
         elif style == TrackballThree.name():
             clust = TrackballThree(all_merged)
+        elif style == TrackballOne.name():
+            clust = TrackballOne(all_merged)
+        elif style == TrackballTwo.name():
+            clust = TrackballTwo(all_merged)
         elif style == TrackballBTU.name():
             clust = TrackballBTU(all_merged)
         elif style == TrackballCJ.name():
