@@ -1749,6 +1749,7 @@ def make_dactyl():
         pos, rot = tbiw_position_rotation()
         if cluster.is_tb:
             pos, rot = cluster.position_rotation()
+            print(pos, rot)
         return generate_trackball(pos, rot, cluster)
 
 

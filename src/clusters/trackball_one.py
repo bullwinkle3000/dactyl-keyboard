@@ -109,26 +109,24 @@ class TrackballOne(TrackballThree):
         return shape
 
     def tl_place(self, shape):
-        raise Exception("Nothing to see here")
-        #
-        # shape = rotate(shape, [0, 0, 0])
-        # t_off = self.key_translation_offsets[0]
-        # shape = rotate(shape, self.key_rotation_offsets[0])
-        # shape = translate(shape, (t_off[0], t_off[1] + self.key_diameter / 2, t_off[2]))
-        # shape = rotate(shape, [0,0,-80])
-        # shape = self.track_place(shape)
-        #
-        # return shape
+        shape = rotate(shape, [0, 0, 0])
+        t_off = self.key_translation_offsets[0]
+        shape = rotate(shape, self.key_rotation_offsets[0])
+        shape = translate(shape, (t_off[0], t_off[1] + self.key_diameter / 2, t_off[2]))
+        shape = rotate(shape, [0,0,-80])
+        shape = self.track_place(shape)
+
+        return shape
 
     def tr_place(self, shape):
         raise Exception("Nothing to see here")
 
     def mr_place(self, shape):
         shape = rotate(shape, [0, 0, 0])
-        shape = rotate(shape, self.key_rotation_offsets[1])
-        t_off = self.key_translation_offsets[1]
-        shape = translate(shape, (t_off[0], t_off[1] + self.key_diameter/2, t_off[2]))
-        shape = rotate(shape, [0,0,-95])
+        t_off = self.key_translation_offsets[0]
+        shape = rotate(shape, self.key_rotation_offsets[0])
+        shape = translate(shape, (t_off[0], t_off[1]+self.key_diameter/2, t_off[2]))
+        shape = rotate(shape, [0, 0, -80])
         shape = self.track_place(shape)
 
         return shape
@@ -157,7 +155,7 @@ class TrackballOne(TrackballThree):
     def thumb_1x_layout(self, shape, cap=False):
         debugprint('thumb_1x_layout()')
         return union([
-            self.mr_place(rotate(shape, [0, 0, self.thumb_plate_tr_rotation])),
+            self.tl_place(rotate(shape, [0, 0, self.thumb_plate_tl_rotation])),
             # self.mr_place(rotate(shape, [0, 0, self.thumb_plate_mr_rotation])),
             # self.bl_place(rotate(shape, [0, 0, self.thumb_plate_bl_rotation])),
             # self.br_place(rotate(shape, [0, 0, self.thumb_plate_br_rotation])),

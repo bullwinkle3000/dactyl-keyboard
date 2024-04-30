@@ -1,14 +1,19 @@
 {
   "key_diameter": 75,
+      "thumb_offsets": [
+        -2,
+        -6,
+        7
+      ],
   "translation_offset": [
-    -5,
-    0,
-    5
+        10,
+        0,
+        0
   ],
   "rotation_offset": [
-    12,
-    15,
-    0
+        10,
+        0,
+        0
   ],
   "key_translation_offsets": [
     [
@@ -22,8 +27,8 @@
       -3.0
     ],
     [
-      5.0,
-      -30.0,
+      0.0,
+      0.0,
       -3.0
     ],
     [

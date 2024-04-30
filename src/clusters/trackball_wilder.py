@@ -96,7 +96,7 @@ class TrackballWild(TrackballOrbyl):
         t_off = self.key_translation_offsets[0]
         shape = rotate(shape, self.key_rotation_offsets[0])
         shape = translate(shape, (t_off[0], t_off[1]+self.key_diameter/2, t_off[2]))
-        shape = rotate(shape, [0, 0, -80])
+        shape = rotate(shape, [0, 0, -95])
         shape = self.track_place(shape)
 
         return shape
