@@ -1,3 +1,5 @@
+import numpy as np
+
 from clusters.trackball_orbyl import TrackballOrbyl
 import json
 import os
@@ -64,6 +66,22 @@ class TrackballOne(TrackballOrbyl):
         super().__init__(parent_locals)
         for item in parent_locals:
             globals()[item] = parent_locals[item]
+
+    def outer_wall(self):
+        angles = [x for x in range(-300, -100, 2)]
+        walls = []
+        for i in range(len(angles) - 1):
+            angle_1 = angles[i]
+            angle_2 = angles[i + 1]
+            rot_1 = [self.base_rot[0], self.base_rot[1], self.base_rot[2] + angle_1]
+            rot_2 = [self.base_rot[0], self.base_rot[1], self.base_rot[2] + angle_2]
+            pos = self.track_position(rotate_point([0, (ball_diameter / 2) + 4, 0], rot_1))
+            pos_next = self.track_position(rotate_point([0, (ball_diameter / 2) + 4, 0], rot_2))
+
+            walls.append(wall_at_angle(pos, pos_next, angle_1, angle_2))
+
+        return union(walls)
+
 
     def position_rotation(self):
         rot = [10, -15, 5]
@@ -309,6 +327,8 @@ class TrackballOne(TrackballOrbyl):
             self.bl_place, -1, 0, web_post_tl(),
             self.bl_place, -1, -1, web_post_bl(),
         )])
+
+        shape = union([shape, self.outer_wall()])
 
         return shape
 

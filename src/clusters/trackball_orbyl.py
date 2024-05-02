@@ -109,24 +109,44 @@ class TrackballOrbyl(DefaultCluster):
         for item in parent_locals:
             globals()[item] = parent_locals[item]
 
-    def position_rotation(self):
-        rot = [10, -15, 5]
+        self.base_rot = [10 + self.rotation_offset[0], -15 + self.rotation_offset[1], 5 + self.rotation_offset[2]]
         pos = self.thumborigin()
         # Changes size based on key diameter around ball, shifting off of the top left cluster key.
-        shift = [-.9 * self.key_diameter/2 + 27 - 42, -.1 * self.key_diameter / 2 + 3 - 20, -5]
+        shift = [-.9 * self.key_diameter / 2 + 27 - 42, -.1 * self.key_diameter / 2 + 3 - 20, -5]
         for i in range(len(pos)):
             pos[i] = pos[i] + shift[i] + self.translation_offset[i]
 
-        for i in range(len(rot)):
-            rot[i] = rot[i] + self.rotation_offset[i]
+        self.base_pos = pos
 
-        return pos, rot
+    def track_rotation(self, rot):
+        return [rot[i] + self.base_rot[i] for i in range(len(rot))]
+
+    def position_rotation(self):
+        return self.base_pos.copy(), self.base_rot.copy()
+
+        # rot = [10, -15, 5]
+        # pos = self.thumborigin()
+        # # Changes size based on key diameter around ball, shifting off of the top left cluster key.
+        # shift = [-.9 * self.key_diameter/2 + 27 - 42, -.1 * self.key_diameter / 2 + 3 - 20, -5]
+        # for i in range(len(pos)):
+        #     pos[i] = pos[i] + shift[i] + self.translation_offset[i]
+        #
+        # for i in range(len(rot)):
+        #     rot[i] = rot[i] + self.rotation_offset[i]
+        #
+        # return pos, self.base_rot.copy()
 
     def track_place(self, shape):
         pos, rot = self.position_rotation()
         shape = rotate(shape, rot)
         shape = translate(shape, pos)
         return shape
+
+    def track_position(self, pos):
+        origin, rot = self.position_rotation()
+        pos = rotate_point(pos, rot)
+        pos = [pos[i] + origin[i] for i in range(len(pos))]
+        return pos
 
     def tl_place(self, shape):
         shape = rotate(shape, [0, 0, 0])

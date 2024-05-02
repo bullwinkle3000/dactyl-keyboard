@@ -748,7 +748,6 @@ def make_dactyl():
         )
         return np.matmul(t_matrix, position)
 
-
     def rotate_around_y(position, angle):
         # debugprint('rotate_around_y()')
         t_matrix = np.array(
@@ -760,6 +759,23 @@ def make_dactyl():
         )
         return np.matmul(t_matrix, position)
 
+    def rotate_around_z(position, angle):
+        # debugprint('rotate_around_y()')
+        t_matrix = np.array(
+            [
+                [np.cos(angle), -np.sin(angle), 0],
+                [np.sin(angle), np.cos(angle), 0],
+                [0, 0, 1]
+            ]
+        )
+        return np.matmul(t_matrix, position)
+
+
+    def rotate_point(pos, rot):
+        pos = rotate_around_x(pos, np.radians(rot[0]))
+        pos = rotate_around_y(pos, np.radians(rot[1]))
+        pos = rotate_around_z(pos, np.radians(rot[2]))
+        return pos
 
     def arc_length_between_rows(radius=row_radius, angle=alpha):
         return radius * angle
@@ -1187,6 +1203,49 @@ def make_dactyl():
         #     -wall_z_offset,
         # ]
 
+    def wall_spot(point):
+        return translate(box(0.1, 0.1, 0.1), point)
+
+    def offset_point(point, angle, dz, thickness):
+        dx = -np.sin(np.radians(angle))
+        dy = np.cos(np.radians(angle))
+        return [point[0] + (dx * thickness), point[1] + (dy * thickness), point[2] + dz]
+
+
+    def wall_section(top_pos1, top_pos2, bottom_pos1, bottom_pos2, angle1, angle2, dz, thickness):
+        points = [
+            wall_spot(top_pos1),
+            wall_spot(offset_point(top_pos1, angle1, dz, thickness)),
+            wall_spot(top_pos2),
+            wall_spot(offset_point(top_pos2, angle2, dz, thickness)),
+            wall_spot(bottom_pos1),
+            wall_spot(offset_point(bottom_pos1, angle1, dz, thickness)),
+            wall_spot(bottom_pos2),
+            wall_spot(offset_point(bottom_pos2, angle2, dz, thickness))
+        ]
+
+        return points
+
+    def wall_at_angle(from_pos, to_pos, wall_angle_from, wall_angle_to, offsets=(3, 3, 1), z_offsets=(-1, -wall_z_offset, -wall_z_offset)):
+        hulls = []
+
+        edge_from = offset_point(from_pos, wall_angle_from, z_offsets[0], offsets[0])
+        edge_to = offset_point(to_pos, wall_angle_to, z_offsets[0], offsets[0])
+
+        hulls.append(hull_from_shapes(wall_section(from_pos, to_pos, edge_from, edge_to, wall_angle_from, wall_angle_to, 0, wall_thickness)))
+
+        mid_from = offset_point(edge_from, wall_angle_from, z_offsets[1], offsets[1])
+        mid_to = offset_point(edge_to, wall_angle_to, z_offsets[1], offsets[1])
+
+        hulls.append(hull_from_shapes(wall_section(edge_from, edge_to, mid_from, mid_to, wall_angle_from, wall_angle_to, 0, wall_thickness)))
+
+        bottom_from = offset_point(mid_from, wall_angle_from, z_offsets[2], offsets[2])
+        bottom_to = offset_point(mid_to, wall_angle_to, z_offsets[2], offsets[2])
+
+        hulls.append(hull_from_shapes(wall_section(mid_from, mid_to, bottom_from, bottom_to, wall_angle_from, wall_angle_to, 0, wall_thickness)))
+
+        return union(hulls)
+
 
     def wall_brace(place1, dx1, dy1, post1, place2, dx2, dy2, post2, back=False):
         debugprint("wall_brace()")
@@ -1214,6 +1273,19 @@ def make_dactyl():
         return union([shape1, shape2])
         # return shape1
 
+    def position_wall_brace(pos1, dx1, dy1, post1, pos2, dx2, dy2, post2, back=False):
+        debugprint("key_wall_brace()")
+        return wall_brace(
+            (lambda shape: translate(shape, pos1)),
+            dx1,
+            dy1,
+            post1,
+            (lambda shape: translate(shape, pos2)),
+            dx2,
+            dy2,
+            post2,
+            back
+        )
 
     def key_wall_brace(x1, y1, dx1, dy1, post1, x2, y2, dx2, dy2, post2, back=False):
         debugprint("key_wall_brace()")
