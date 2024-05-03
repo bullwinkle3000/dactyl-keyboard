@@ -45,7 +45,7 @@ class TrackballOne(TrackballOrbyl):
 
 
     def get_config(self):
-        with open(os.path.join("src", "clusters", "json", "TRACKBALL_WILD.json"), mode='r') as fid:
+        with open(os.path.join("src", "clusters", "json", "TRACKBALL_TWO.json"), mode='r') as fid:
             data = json.load(fid)
 
         superdata = super().get_config()
@@ -68,15 +68,15 @@ class TrackballOne(TrackballOrbyl):
             globals()[item] = parent_locals[item]
 
     def outer_wall(self):
-        angles = [x for x in range(-300, -100, 2)]
+        angles = [x for x in range(-360, -80, 45)]
         walls = []
         for i in range(len(angles) - 1):
             angle_1 = angles[i]
             angle_2 = angles[i + 1]
             rot_1 = [self.base_rot[0], self.base_rot[1], self.base_rot[2] + angle_1]
             rot_2 = [self.base_rot[0], self.base_rot[1], self.base_rot[2] + angle_2]
-            pos = self.track_position(rotate_point([0, (ball_diameter / 2) + 4, 0], rot_1))
-            pos_next = self.track_position(rotate_point([0, (ball_diameter / 2) + 4, 0], rot_2))
+            pos = self.track_position(rotate_point([0, (ball_diameter / 2) + 3, 0], rot_1))
+            pos_next = self.track_position(rotate_point([0, (ball_diameter / 2) + 3, 0], rot_2))
 
             walls.append(wall_at_angle(pos, pos_next, angle_1, angle_2))
 
@@ -95,7 +95,6 @@ class TrackballOne(TrackballOrbyl):
             rot[i] = rot[i] + self.rotation_offset[i]
 
         return pos, rot
-
 
     def tl_wall(self, shape):
         return translate(self.tl_place(shape), self.wall_offsets[0])
@@ -135,10 +134,22 @@ class TrackballOne(TrackballOrbyl):
         t_off = self.key_translation_offsets[0]
         shape = rotate(shape, self.key_rotation_offsets[0])
         shape = translate(shape, (t_off[0], t_off[1]+self.key_diameter/2, t_off[2]))
-        shape = rotate(shape, [0, 0, -95])
+        shape = rotate(shape, [0, 0, -65])
         shape = self.track_place(shape)
-
+        # self.tl_position()
         return shape
+
+    def tl_position(self):
+        pos = [0, 0, 0]
+        t_off = self.key_translation_offsets[0].copy()
+        pos = rotate_point(pos, self.key_rotation_offsets[0])
+        pos = translate_point(pos, (t_off[0], t_off[1]+self.key_diameter/2, t_off[2]))
+        pos = rotate_point(pos, [0, 0, -65])
+        pos1, rot1 = self.position_rotation()
+        pos = rotate_point(pos, rot1)
+        pos = translate_point(pos, pos1)
+        print("tl is ", pos)
+
 
     def mr_place(self, shape):
         shape = rotate(shape, [0, 0, 0])
@@ -180,19 +191,19 @@ class TrackballOne(TrackballOrbyl):
         hulls.append(
             triangle_hulls(
                 [
-                    self.track_place(self.tb_post_l()),
-                    self.bl_place(web_post_tl()),
-                    self.track_place(self.tb_post_bl()),
-                    self.bl_place(web_post_tr()),
-                    self.br_place(web_post_tl()),
-                    self.track_place(self.tb_post_bl()),
-                    self.br_place(web_post_tr()),
+                    # self.track_place(self.tb_post_l()),
+                    # self.bl_place(web_post_tl()),
+                    # self.track_place(self.tb_post_bl()),
+                    # self.bl_place(web_post_tr()),
+                    # self.br_place(web_post_tl()),
+                    # self.track_place(self.tb_post_bl()),
+                    # self.br_place(web_post_tr()),
+                    # self.track_place(self.tb_post_br()),
+                    # self.br_place(web_post_tr()),
                     self.track_place(self.tb_post_br()),
-                    self.br_place(web_post_tr()),
-                    self.track_place(self.tb_post_br()),
-                    self.mr_place(web_post_br()),
+                    self.tr_place(web_post_br()),
                     self.track_place(self.tb_post_r()),
-                    self.mr_place(web_post_bl()),
+                    self.tr_place(web_post_br()),
                     self.tl_place(web_post_br( )),
                     self.track_place(self.tb_post_r()),
                     self.tl_place(web_post_bl( )),
@@ -204,39 +215,39 @@ class TrackballOne(TrackballOrbyl):
         )
 
         # bottom left
-        hulls.append(
-            triangle_hulls(
-                [
-                    self.bl_place(web_post_tr()),
-                    self.br_place(web_post_tl()),
-                    self.bl_place(web_post_br()),
-                    self.br_place(web_post_bl()),
-                ]
-            )
-        )
-
-        # bottom right
-        hulls.append(
-            triangle_hulls(
-                [
-                    self.br_place(web_post_tr()),
-                    self.mr_place(web_post_br()),
-                    self.br_place(web_post_br()),
-                    self.mr_place(web_post_tr()),
-                ]
-            )
-        )
-        # top right
-        hulls.append(
-            triangle_hulls(
-                [
-                    self.mr_place(web_post_bl()),
-                    self.tl_place(web_post_br()),
-                    self.mr_place(web_post_tl()),
-                    self.tl_place(web_post_tr(off_h=self.tl_off)),
-                ]
-            )
-        )
+        # hulls.append(
+        #     triangle_hulls(
+        #         [
+        #             self.bl_place(web_post_tr()),
+        #             self.br_place(web_post_tl()),
+        #             self.bl_place(web_post_br()),
+        #             self.br_place(web_post_bl()),
+        #         ]
+        #     )
+        # )
+        #
+        # # bottom right
+        # hulls.append(
+        #     triangle_hulls(
+        #         [
+        #             self.br_place(web_post_tr()),
+        #             self.mr_place(web_post_br()),
+        #             self.br_place(web_post_br()),
+        #             self.mr_place(web_post_tr()),
+        #         ]
+        #     )
+        # )
+        # # top right
+        # hulls.append(
+        #     triangle_hulls(
+        #         [
+        #             self.mr_place(web_post_bl()),
+        #             self.tl_place(web_post_br()),
+        #             self.mr_place(web_post_tl()),
+        #             self.tl_place(web_post_tr(off_h=self.tl_off)),
+        #         ]
+        #     )
+        # )
 
         hulls.append(
             triangle_hulls(
@@ -269,47 +280,47 @@ class TrackballOne(TrackballOrbyl):
         print('thumb_walls()')
         # thumb, walls
         shape = wall_brace(
-            self.mr_place, .5, 1, web_post_tl(),
+            self.tr_place, .5, 1, web_post_br(),
             (lambda sh: cluster_key_place(sh, 3, lastrow)), 0, -1, web_post_bl(),
         )
         shape = union([shape, wall_brace(
-            self.mr_place, .5, 1, web_post_tl(),
-            self.mr_place, .5, 1, web_post_tr(),
+            self.tr_place, .5, 1, web_post_bl(),
+            self.tr_place, .5, 1, web_post_br(),
         )])
         # BOTTOM FRONT BETWEEN MR AND BR
-        shape = union([shape, wall_brace(
-            self.mr_place, .5, 1, web_post_tr(),
-            self.br_place, 0, -1, web_post_br(),
-        )])
-        # BOTTOM FRONT AT BR
-        shape = union([shape, wall_brace(
-            self.br_place, 0, -1, web_post_br(),
-            self.br_place, 0, -1, web_post_bl(),
-        )])
-        # BOTTOM FRONT BETWEEN BR AND BL
-        shape = union([shape, wall_brace(
-            self.br_place, 0, -1, web_post_bl(),
-            self.bl_place, 0, -1, web_post_br(),
-        )])
-        # BOTTOM FRONT AT BL
-        shape = union([shape, wall_brace(
-            self.bl_place, 0, -1, web_post_br(),
-            self.bl_place, -1, -1, web_post_bl(),
-        )])
-        # TOP LEFT BEHIND TRACKBALL
-        shape = union([shape, wall_brace(
-            self.track_place, -1.5, 0, self.tb_post_tl(),
-            (lambda sh: left_cluster_key_place(sh, lastrow - 1, -1, side=ball_side, low_corner=True)), -1, 0, web_post(),
-        )])
-        # LEFT OF TRACKBALL
-        shape = union([shape, wall_brace(
-            self.track_place, -2, 0, self.tb_post_tl(),
-            self.track_place, -2, 0, self.tb_post_l(),
-        )])
-        shape = union([shape, wall_brace(
-            self.track_place, -2, 0, self.tb_post_l(),
-            self.bl_place, -1, 0, web_post_tl(),
-        )])
+        # shape = union([shape, wall_brace(
+        #     self.mr_place, .5, 1, web_post_tr(),
+        #     self.br_place, 0, -1, web_post_br(),
+        # )])
+        # # BOTTOM FRONT AT BR
+        # shape = union([shape, wall_brace(
+        #     self.br_place, 0, -1, web_post_br(),
+        #     self.br_place, 0, -1, web_post_bl(),
+        # )])
+        # # BOTTOM FRONT BETWEEN BR AND BL
+        # shape = union([shape, wall_brace(
+        #     self.br_place, 0, -1, web_post_bl(),
+        #     self.bl_place, 0, -1, web_post_br(),
+        # )])
+        # # BOTTOM FRONT AT BL
+        # shape = union([shape, wall_brace(
+        #     self.bl_place, 0, -1, web_post_br(),
+        #     self.bl_place, -1, -1, web_post_bl(),
+        # )])
+        # # TOP LEFT BEHIND TRACKBALL
+        # shape = union([shape, wall_brace(
+        #     self.track_place, -1.5, 0, self.tb_post_tl(),
+        #     (lambda sh: left_cluster_key_place(sh, lastrow - 1, -1, side=ball_side, low_corner=True)), -1, 0, web_post(),
+        # )])
+        # # LEFT OF TRACKBALL
+        # shape = union([shape, wall_brace(
+        #     self.track_place, -2, 0, self.tb_post_tl(),
+        #     self.track_place, -2, 0, self.tb_post_l(),
+        # )])
+        # shape = union([shape, wall_brace(
+        #     self.track_place, -2, 0, self.tb_post_l(),
+        #     self.bl_place, -1, 0, web_post_tl(),
+        # )])
 
         # BEFORE BTUS
         #
@@ -323,10 +334,10 @@ class TrackballOne(TrackballOrbyl):
         #     self.bl_place, -1, 0, web_post_tl(),
         # )])
 
-        shape = union([shape, wall_brace(
-            self.bl_place, -1, 0, web_post_tl(),
-            self.bl_place, -1, -1, web_post_bl(),
-        )])
+        # shape = union([shape, wall_brace(
+        #     self.bl_place, -1, 0, web_post_tl(),
+        #     self.bl_place, -1, -1, web_post_bl(),
+        # )])
 
         shape = union([shape, self.outer_wall()])
 
@@ -351,16 +362,16 @@ class TrackballOne(TrackballOrbyl):
             )
         )
 
-        hulls.append(
-            triangle_hulls(
-                [
-                    self.tl_place(web_post_tl()),
-                    self.tl_place(web_post_tl(off_h=self.tl_off)),
-                    self.tl_place(web_post_bl()),
-                    self.tl_place(web_post_tl())
-                ]
-            )
-        )
+        # hulls.append(
+        #     triangle_hulls(
+        #         [
+        #             self.tl_place(web_post_tl()),
+        #             self.tl_place(web_post_tl(off_h=self.tl_off)),
+        #             self.tl_place(web_post_bl()),
+        #             self.tl_place(web_post_tl())
+        #         ]
+        #     )
+        # )
 
         hulls.append(
             triangle_hulls(
@@ -507,9 +518,12 @@ class TrackballOne(TrackballOrbyl):
             triangle_hulls(
                 [
                     self.tl_place(web_post_tr(off_h=self.tl_off)),
-                    cluster_key_place(web_post_br(), 2, lastrow),  # col 2 bottom, top left corner
-                    cluster_key_place(web_post_bl(), 3, lastrow),  # col 2 bottom, top left corner
-                    self.tl_place(web_post_tr(off_h=self.tl_off))  # col 2 bottom, bottom left corner
+                    cluster_key_place(web_post_bl(), 3, lastrow),
+                    self.tr_place(web_post_br()),
+                    self.tl_place(web_post_br(off_h=self.tl_off)),
+                    self.tl_place(web_post_tr(off_h=self.tl_off)),
+                    # cluster_key_place(web_post_br(), 2, lastrow),
+                    # self.tl_place(web_post_tr(off_h=self.tl_off))
                 ]
             )
         )
@@ -518,24 +532,35 @@ class TrackballOne(TrackballOrbyl):
             triangle_hulls(
                 [
                     self.tl_place(web_post_tr(off_h=self.tl_off)),
+                    cluster_key_place(web_post_br(), 2, lastrow),  # col 2 bottom, top left corner
                     cluster_key_place(web_post_bl(), 3, lastrow),  # col 2 bottom, top left corner
-                    self.mr_wall(web_post_tl()),
                     self.tl_place(web_post_tr(off_h=self.tl_off))  # col 2 bottom, bottom left corner
                 ]
             )
         )
 
+        # hulls.append(
+        #     triangle_hulls(
+        #         [
+        #             self.tl_place(web_post_tr(off_h=self.tl_off)),
+        #             cluster_key_place(web_post_bl(), 3, lastrow),  # col 2 bottom, top left corner
+        #             self.tl_wall(web_post_tl()),
+        #             self.tl_place(web_post_tr(off_h=self.tl_off))  # col 2 bottom, bottom left corner
+        #         ]
+        #     )
+        # )
+
         # Duplicate of above, just offset by x: -0.5 to ensure wall thickness
-        hulls.append(
-            translate(triangle_hulls(
-                [
-                    self.tl_place(web_post_tr( off_h=self.tl_off)),
-                    cluster_key_place(web_post_bl(), 3, lastrow),  # col 2 bottom, top left corner
-                    self.mr_wall(web_post_tl()),
-                    self.tl_place(web_post_tr(off_h=self.tl_off))  # col 2 bottom, bottom left corner
-                ]
-            ), [-0.5, 0, 0])
-        )
+        # hulls.append(
+        #     translate(triangle_hulls(
+        #         [
+        #             self.tl_place(web_post_tr( off_h=self.tl_off)),
+        #             cluster_key_place(web_post_bl(), 3, lastrow),  # col 2 bottom, top left corner
+        #             self.tl_wall(web_post_tl()),
+        #             self.tl_place(web_post_tr(off_h=self.tl_off))  # col 2 bottom, bottom left corner
+        #         ]
+        #     ), [-0.5, 0, 0])
+        # )
 
         # hulls.append(
         #     triangle_hulls(
@@ -577,16 +602,16 @@ class TrackballOne(TrackballOrbyl):
             )
         )
 
-        hulls.append(
-            triangle_hulls(
-            [
-                cluster_key_place(web_post_bl(), 0, cornerrow),
-                key_place(web_post_bl(), 0, cornerrow),
-                # left_cluster_key_place(web_post_bl(), cornerrow, 0, low_corner=False, side=side),
-                translate(key_place(web_post_bl(), 0, cornerrow), wall_locate1(-1, 0))
-
-            ]
-        ))
+        # hulls.append(
+        #     triangle_hulls(
+        #     [
+        #         cluster_key_place(web_post_bl(), 0, cornerrow),
+        #         key_place(web_post_bl(), 0, cornerrow),
+        #         # left_cluster_key_place(web_post_bl(), cornerrow, 0, low_corner=False, side=side),
+        #         translate(key_place(web_post_bl(), 0, cornerrow), wall_locate1(-1, 0))
+        #
+        #     ]
+        # ))
 
         shape = union(hulls)
         return shape
@@ -612,3 +637,10 @@ class TrackballOne(TrackballOrbyl):
             support = union([support, base])
             posts.append(support)
         return union(posts)
+
+    def screw_positions(self):
+        position = self.thumborigin()
+        position = list(np.array(position) + np.array([-55, -40, -16]))
+        position[2] = 0
+
+        return position

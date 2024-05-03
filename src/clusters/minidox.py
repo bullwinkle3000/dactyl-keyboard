@@ -41,22 +41,37 @@ class MinidoxCluster(DefaultCluster):
         origin[1] = origin[1] - .4 * (trackball_Usize - 1) * sa_length
         return origin
 
+    def final_place(self, shape):
+        return rotate(shape, [0, 0, 15])
+
     def tl_place(self, shape):
         shape = rotate(shape, [10, -23, 25])
         shape = translate(shape, self.thumborigin())
         shape = translate(shape, [-35, -16, -2])
+        shape = self.final_place(shape)
         return shape
+
+    def tr_position(self):
+        pos = [0, 0, 0]
+
+        pos = rotate_point(pos, [14, -15, 10])
+        pos = translate_point(pos, self.thumborigin())
+        pos = translate_point(pos, [-15, -10, 5])
+        print("minidox tl is ", pos)
 
     def tr_place(self, shape):
         shape = rotate(shape, [14, -15, 10])
         shape = translate(shape, self.thumborigin())
         shape = translate(shape, [-15, -10, 5])
+        shape = self.final_place(shape)
+        # self.tr_position()
         return shape
 
     def ml_place(self, shape):
         shape = rotate(shape, [6, -34, 40])
         shape = translate(shape, self.thumborigin())
         shape = translate(shape, [-53, -26, -12])
+        shape = self.final_place(shape)
         return shape
 
     def mr_place(self, shape):

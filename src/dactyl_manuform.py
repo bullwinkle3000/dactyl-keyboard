@@ -777,6 +777,9 @@ def make_dactyl():
         pos = rotate_around_z(pos, np.radians(rot[2]))
         return pos
 
+    def translate_point(pos, t_by):
+        return [pos[i] + t_by[i] for i in range(len(pos))]
+
     def arc_length_between_rows(radius=row_radius, angle=alpha):
         return radius * angle
 
@@ -1206,27 +1209,27 @@ def make_dactyl():
     def wall_spot(point):
         return translate(box(0.1, 0.1, 0.1), point)
 
-    def offset_point(point, angle, dz, thickness):
+    def offset_point(point, angle, z_offset, thickness):
         dx = -np.sin(np.radians(angle))
         dy = np.cos(np.radians(angle))
-        return [point[0] + (dx * thickness), point[1] + (dy * thickness), point[2] + dz]
+        return [point[0] + (dx * thickness), point[1] + (dy * thickness), point[2] + z_offset]
 
 
-    def wall_section(top_pos1, top_pos2, bottom_pos1, bottom_pos2, angle1, angle2, dz, thickness):
+    def wall_section(top_pos1, top_pos2, bottom_pos1, bottom_pos2, angle1, angle2, z_offset, thickness):
         points = [
             wall_spot(top_pos1),
-            wall_spot(offset_point(top_pos1, angle1, dz, thickness)),
+            wall_spot(offset_point(top_pos1, angle1, z_offset, thickness)),
             wall_spot(top_pos2),
-            wall_spot(offset_point(top_pos2, angle2, dz, thickness)),
+            wall_spot(offset_point(top_pos2, angle2, z_offset, thickness)),
             wall_spot(bottom_pos1),
-            wall_spot(offset_point(bottom_pos1, angle1, dz, thickness)),
+            wall_spot(offset_point(bottom_pos1, angle1, z_offset, thickness)),
             wall_spot(bottom_pos2),
-            wall_spot(offset_point(bottom_pos2, angle2, dz, thickness))
+            wall_spot(offset_point(bottom_pos2, angle2, z_offset, thickness))
         ]
 
         return points
 
-    def wall_at_angle(from_pos, to_pos, wall_angle_from, wall_angle_to, offsets=(3, 3, 1), z_offsets=(-1, -wall_z_offset, -wall_z_offset)):
+    def wall_at_angle(from_pos, to_pos, wall_angle_from, wall_angle_to, offsets=(3, 3, -1), z_offsets=(-3, -wall_z_offset, -(wall_z_offset * 2))):
         hulls = []
 
         edge_from = offset_point(from_pos, wall_angle_from, z_offsets[0], offsets[0])
