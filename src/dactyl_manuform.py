@@ -1736,7 +1736,7 @@ def make_dactyl():
             tb_file = path.join(parts_path, r"phat_btu_socket")
             tbcut_file = path.join(parts_path, r"phatter_btu_socket_cutter")
         else:
-            tb_file = path.join(parts_path, r"trackball_socket_body_34mm")
+            tb_file = path.join(parts_path, r"socket_ceramic_spheres")
             tbcut_file = path.join(parts_path, r"trackball_socket_cutter_34mm")
 
         if ENGINE == 'cadquery':
@@ -2507,12 +2507,13 @@ def make_dactyl():
                     shape = union([shape, tb])
                 else:
                     # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_1"))
+                    shape = difference(shape, [tbcutout])
                     shape = union([shape, tb])
                     # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_2"))
-                    shape = difference(shape, [tbcutout])
+
                     # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_3a"))
                     # export_file(shape=add([shape, sensor]), fname=path.join(save_path, config_name + r"_test_3b"))
-                    shape = union([shape, sensor])
+                    # shape = union([shape, sensor])
 
                 if show_caps:
                     shape = add([shape, ball])
@@ -2592,22 +2593,22 @@ def make_dactyl():
                 inner_shape = translate(inner_shape, (0, 0, -base_rim_thickness))
                 if block_bottoms:
                     inner_shape = blockerize(inner_shape)
-                if logo_file not in ["", None]:
-                    logo_offset = [
-                        -10,
-                        -10,
-                        -0.5
-                    ]
-                    logo = import_file(logo_file)
-                    if side == "left":
-                        logo = mirror(logo, "YZ")
-                    if ncols <= 6:
-                        logo_offset[0] -= 12 * (7 - ncols)
-                    if nrows <= 5:
-                        logo_offset[1] += 15 * (6 - ncols)
-                    logo = translate(logo, logo_offset)
-
-                    inner_shape = union([inner_shape, logo])
+                # if logo_file not in ["", None]:
+                #     logo_offset = [
+                #         -10,
+                #         -10,
+                #         -0.5
+                #     ]
+                #     logo = import_file(logo_file)
+                #     if side == "left":
+                #         logo = mirror(logo, "YZ")
+                #     if ncols <= 6:
+                #         logo_offset[0] -= 12 * (7 - ncols)
+                #     if nrows <= 5:
+                #         logo_offset[1] += 15 * (6 - ncols)
+                #     logo = translate(logo, logo_offset)
+                #
+                #     inner_shape = union([inner_shape, logo])
 
                 holes = []
                 for i in range(len(base_wires)):
@@ -2632,6 +2633,96 @@ def make_dactyl():
                 shape = difference(shape, hole_shapes)
                 shape = translate(shape, (0, 0, -base_rim_thickness))
                 shape = union([shape, inner_shape])
+
+                if has_puck:
+                    height = 6.0
+                    mount = (
+                        wp()
+                        .circle(20)
+                        .workplane(offset=height)
+                        .circle(12)
+                        .loft(combine=True)
+                    )
+
+                    screw = cq.importers.importStep(
+                        os.path.abspath(os.path.join(r"src", "parts", "quarter_inch_screw.step"))).translate([0, 0, -9])
+
+                    mid_row = int(np.floor(nrows / 2))
+
+                    pos = key_position([0, 0, 0], 0, mid_row)
+                    pos[2] = -base_rim_thickness
+                    pos[0] += (ncols * 6)
+                    mount = translate(mount, pos)
+                    screw = translate(screw, pos)
+                    cut = translate(cylinder(10, 5), pos)
+
+                    shape = difference(shape, [cut])
+                    shape = union([shape, mount])
+                    shape = difference(shape, [screw])
+
+                    # top_inside_key = key_position([0, 0, 0], 0, 0)
+                    # bottom_key_position = key_position([0, 0, 0], ncols - 1, bottom_key(ncols - 1))
+                    # offsets, shift_at = get_left_wall_offsets(side)
+                    # min_offset = 1000
+                    # for offset in offsets:
+                    #     if min_offset < offset:
+                    #         min_offset = offset
+                    #
+                    # y = top_inside_key[1] + 5
+                    #
+                    # max_x = bottom_key_position[0] + 6
+                    # min_y = bottom_key_position[1] - 16
+                    #
+                    # m2_positions = []
+                    #
+                    # while y >= min_y:
+                    #     x = top_inside_key[0] - min_offset + 6
+                    #
+                    #     while x <= max_x:
+                    #         m2_positions.append([x, y, 0])
+                    #         x += 19.55
+                    #
+                    #     y -= 19.55
+                    #
+                    # m2_holes = []
+                    # for puck_position in m2_positions:
+                    #     m2_holes.append(wp().cylinder(200, 1.1).translate((puck_position[0], puck_position[1], 0)))
+                    #
+                    # shape = difference(shape, m2_holes)
+
+                # if has_puck:
+                #     puck_base = get_puck_base()
+                #     # export_file(shape=puck_hole, fname=path.join(save_path, r"puck_hole"))
+                #     # export_file(shape=puck_base, fname=path.join(save_path, r"puck_base"))
+                #     # shape = union([shape, puck_base])
+                #     # shape = difference(shape, [puck_hole])
+                #     hole_dist = 38.1 / 2
+                #     holes = [
+                #         [hole_dist, 0],
+                #         [0, hole_dist],
+                #         [-hole_dist, 0],
+                #         [0, -hole_dist]
+                #     ]
+                #
+                #     # hole_shapes = []
+                #     puck_centerpoint = key_position([0, 0, 0], 0, centerrow_offset - 0.5)
+                #     puck_centerpoint[0] += 10
+                #     # puck_centerpoint[0] += 10
+                #     puck_centerpoint[2] = -2
+                #     puck_base = translate(puck_base, puck_centerpoint)
+                #
+                #     shape = union([shape, puck_base])
+                #
+                #     all_holes = None
+                #     for hole in holes:
+                #         new_hole = wp().cylinder(200, 1.55).translate((hole[0], hole[1], 0))
+                #         all_holes = new_hole if all_holes is None else union([all_holes, new_hole])
+                #
+                #     all_holes = rotate(all_holes, (0, 0, 45))
+                #     all_holes = translate(all_holes, puck_centerpoint)
+                #
+                #     shape = difference(shape, [all_holes])
+
                 if controller_mount_type == "EXTERNAL_BREAKOUT":
                     controller_shape = translate(box(36.5, 57.5, 5),
                                                  (

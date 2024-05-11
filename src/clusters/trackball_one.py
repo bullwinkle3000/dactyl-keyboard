@@ -75,8 +75,8 @@ class TrackballOne(TrackballOrbyl):
             angle_2 = angles[i + 1]
             rot_1 = [self.base_rot[0], self.base_rot[1], self.base_rot[2] + angle_1]
             rot_2 = [self.base_rot[0], self.base_rot[1], self.base_rot[2] + angle_2]
-            pos = self.track_position(rotate_point([0, (ball_diameter / 2) + 3, 0], rot_1))
-            pos_next = self.track_position(rotate_point([0, (ball_diameter / 2) + 3, 0], rot_2))
+            pos = self.track_position(rotate_point([0, (ball_diameter / 2) + 4, 0], rot_1))
+            pos_next = self.track_position(rotate_point([0, (ball_diameter / 2) + 4, 0], rot_2))
 
             walls.append(wall_at_angle(pos, pos_next, angle_1, angle_2))
 
@@ -280,12 +280,12 @@ class TrackballOne(TrackballOrbyl):
         print('thumb_walls()')
         # thumb, walls
         shape = wall_brace(
-            self.tr_place, .5, 1, web_post_br(),
+            self.tr_place, 0, 1, web_post_br(),
             (lambda sh: cluster_key_place(sh, 3, lastrow)), 0, -1, web_post_bl(),
         )
         shape = union([shape, wall_brace(
-            self.tr_place, .5, 1, web_post_bl(),
-            self.tr_place, .5, 1, web_post_br(),
+            self.tr_place, 0, 0.5, web_post_bl(),
+            self.tr_place, 0, 0.5, web_post_br(),
         )])
         # BOTTOM FRONT BETWEEN MR AND BR
         # shape = union([shape, wall_brace(
@@ -617,26 +617,27 @@ class TrackballOne(TrackballOrbyl):
         return shape
 
     def get_extras(self, shape, pos):
-        posts = [shape]
-        all_pos = []
-        for i in range(len(pos)):
-            all_pos.append(pos[i] + tb_socket_translation_offset[i])
-        z_pos = abs(pos[2])
-        for post_offset in self.post_offsets:
-            support_z = z_pos + post_offset[2]
-            new_offsets = post_offset.copy()
-            new_offsets[2] = -z_pos
-            support = cylinder(1.5, support_z, 10)
-            support = translate(support, all_pos)
-            support = translate(support, new_offsets)
-            base = cylinder(4, 1, 10)
-            new_offsets[2] = 0.5 - all_pos[2]
-            base = translate(base, all_pos)
-            base = translate(base, new_offsets)
-            posts.append(base)
-            support = union([support, base])
-            posts.append(support)
-        return union(posts)
+        return shape
+        # posts = [shape]
+        # all_pos = []
+        # for i in range(len(pos)):
+        #     all_pos.append(pos[i] + tb_socket_translation_offset[i])
+        # z_pos = abs(pos[2])
+        # for post_offset in self.post_offsets:
+        #     support_z = z_pos + post_offset[2]
+        #     new_offsets = post_offset.copy()
+        #     new_offsets[2] = -z_pos
+        #     support = cylinder(1.5, support_z, 10)
+        #     support = translate(support, all_pos)
+        #     support = translate(support, new_offsets)
+        #     base = cylinder(4, 1, 10)
+        #     new_offsets[2] = 0.5 - all_pos[2]
+        #     base = translate(base, all_pos)
+        #     base = translate(base, new_offsets)
+        #     posts.append(base)
+        #     support = union([support, base])
+        #     posts.append(support)
+        # return union(posts)
 
     def screw_positions(self):
         position = self.thumborigin()

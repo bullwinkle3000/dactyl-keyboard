@@ -1,4 +1,14 @@
 {
+  "tb_socket_translation_offset": [
+    0,
+    0,
+    8
+  ],
+  "tb_socket_rotation_offset": [
+    0,
+    1,
+    30
+  ],
   "tbiw_translational_offset": [
     -6,
     -29,
