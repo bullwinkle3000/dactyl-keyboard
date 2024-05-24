@@ -483,6 +483,16 @@ def build_holder(pcb):
     base = base.union(posts1).union(posts2).union(rear_guard)
     wall = wall.union(base)
 
+    insert_cap_1 = wp().cylinder(5.5, 2.5).translate(((pcb["w"] / 2) - 5, -(pcb["l"] / 2) + 4, -5.8))
+    insert_cap_2 = wp().cylinder(5.5, 2.5).translate(((pcb["w"] / 2) - 5, (pcb["l"] / 2) - 2, -5.8))
+
+    wall = wall.union(insert_cap_1).union(insert_cap_2)
+
+    screw1 = wp().cylinder(20, 1).translate(((pcb["w"] / 2) - 5, -(pcb["l"] / 2) + 4, 0))
+    screw2 = wp().cylinder(20, 1).translate(((pcb["w"] / 2) - 5, (pcb["l"] / 2) - 2, 0))
+
+    wall = wall.cut(screw1).cut(screw2)
+
     return wall
 
 
