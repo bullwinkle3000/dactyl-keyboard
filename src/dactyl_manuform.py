@@ -2719,7 +2719,7 @@ def make_dactyl():
                 if show_caps:
                     shape = add([shape, ball])
 
-        block = translate(box(300, 300, 40), (0, 0, -20))
+        block = translate(box(400, 400, 40), (0, 0, -20))
         shape = difference(shape, [block])
 
         if show_caps:
@@ -2992,7 +2992,7 @@ def make_dactyl():
 
         # export_file(shape=puck_plate(), fname=path.join(save_path, config_name + r"_puck_plate"))
 
-        if ENGINE != "cadquery":
+        if ENGINE != "cadquery" and render_png:
             render_samples(overrides_name, ncols, save_path)
 
     all_merged = locals().copy()
