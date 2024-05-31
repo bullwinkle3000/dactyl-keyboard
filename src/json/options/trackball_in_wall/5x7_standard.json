@@ -67,10 +67,10 @@
     -7, -5, 1
   ],
   "tbiw_encoder_wall_offset": [
-    -85, -2, 41
+    -82, 0, 42
   ],
   "tbiw_encoder_wall_rotation": [
-    -3, -4, -1
+    0, -4, -1
   ],
   "screw_offsets": [
     [
