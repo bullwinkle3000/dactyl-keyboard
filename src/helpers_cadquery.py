@@ -476,20 +476,20 @@ def build_holder(pcb):
     wall = wall.cut(inset)
     wall = wall.cut(groove_neg)
     pcb_box = pcb_box.translate([0, 0, -2])
-    posts1 = wp().box(3, pcb["l"], 5.5).translate([-pcb["w"] / 2 + 1, 0, -5.8])
+    # posts1 = wp().box(3, pcb["l"], 5.5).translate([-pcb["w"] / 2 + 1, 0, -5.8])
     posts2 = wp().box(3, pcb["l"], 5.5).translate([pcb["w"] / 2 - 1, 0, -5.8])
     rear_guard = wp().box(pcb["w"], 3.0, 7.5).translate([0, -pcb["l"] / 2 - 1, -4.8])
     wall = wall.cut(pcb_box)
-    base = base.union(posts1).union(posts2).union(rear_guard)
+    base = base.union(posts2)  # .union(rear_guard)
     wall = wall.union(base)
 
-    insert_cap_1 = wp().cylinder(5.5, 2.5).translate(((pcb["w"] / 2) - 5, -(pcb["l"] / 2) + 4, -5.8))
-    insert_cap_2 = wp().cylinder(5.5, 2.5).translate(((pcb["w"] / 2) - 5, (pcb["l"] / 2) - 2, -5.8))
+    insert_cap_1 = wp().cylinder(5.5, 3.2).translate((-(pcb["w"] / 2) + 5, -(pcb["l"] / 2) + 4, -5.8))
+    insert_cap_2 = wp().cylinder(5.5, 3.2).translate((-(pcb["w"] / 2) + 5, (pcb["l"] / 2) - 2, -5.8))
 
     wall = wall.union(insert_cap_1).union(insert_cap_2)
 
-    screw1 = wp().cylinder(20, 1).translate(((pcb["w"] / 2) - 5, -(pcb["l"] / 2) + 4, 0))
-    screw2 = wp().cylinder(20, 1).translate(((pcb["w"] / 2) - 5, (pcb["l"] / 2) - 2, 0))
+    screw1 = wp().cylinder(20, 1.55).translate((-(pcb["w"] / 2) + 5, -(pcb["l"] / 2) + 4, 0))
+    screw2 = wp().cylinder(20, 1.55).translate((-(pcb["w"] / 2) + 5, (pcb["l"] / 2) - 2, 0))
 
     wall = wall.cut(screw1).cut(screw2)
 

@@ -3,5 +3,5 @@
   "wall_thickness": 3.0,
   "wall_base_y_thickness": 3.0,
   "wall_base_x_thickness": 3.0,
-  "wall_base_back_thickness": 3.0
+  "wall_base_back_thickness": 2.75
 }
