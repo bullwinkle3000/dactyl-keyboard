@@ -1898,8 +1898,8 @@ def make_dactyl():
             tb_file = path.join(parts_path, r"phat_btu_socket")
             tbcut_file = path.join(parts_path, r"phatter_btu_socket_cutter")
         elif ceramic:
-            tb_file = path.join(parts_path, r"socket_ceramic_spheres")
-            tbcut_file = path.join(parts_path, r"socket_ceramic_cutout")
+            tb_file = path.join(parts_path, r"socket_btu")
+            tbcut_file = path.join(parts_path, r"btu_cutter")
         else:
             tb_file = path.join(parts_path, r"trackball_socket_body_34mm")
             tbcut_file = path.join(parts_path, r"trackball_socket_cutter_34mm")
@@ -2682,17 +2682,18 @@ def make_dactyl():
                     # shape = difference(shape, [tbcutout])
                     shape = union([shape, tb])
                 else:
-                    shape = difference(shape, [top_cutter])
-                    shape = difference(shape, [tbprecut, mount])
+                    shape = difference(shape, [tbprecut])
                     # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_1"))
-                    tb = difference(tb, [tbcutout])
+                    # tb = difference(tb, [tbcutout])
                     shape = union([shape, tb])
-                    shape = difference(shape, [tbcutout])
+                    # shape = difference(shape, [tbcutout])
                     # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_2"))
                     # shape = difference(shape, [tbcutout])
                     # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_3a"))
                     # export_file(shape=add([shape, sensor]), fname=path.join(save_path, config_name + r"_test_3b"))
-                    shape = union([shape, sensor])
+                    # shape = union([shape, sensor])
+                    shape = difference(shape, [tbcutout])
+                    shape = union([shape, tb])
 
                 if show_caps:
                     shape = add([shape, ball])
