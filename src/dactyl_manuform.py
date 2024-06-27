@@ -2681,19 +2681,18 @@ def make_dactyl():
                     # shape = difference(shape, [cutter])
                     # shape = difference(shape, [tbcutout])
                     shape = union([shape, tb])
-                else:
+                elif ceramic:
                     shape = difference(shape, [tbprecut])
-                    # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_1"))
-                    # tb = difference(tb, [tbcutout])
                     shape = union([shape, tb])
-                    # shape = difference(shape, [tbcutout])
-                    # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_2"))
-                    # shape = difference(shape, [tbcutout])
-                    # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_3a"))
-                    # export_file(shape=add([shape, sensor]), fname=path.join(save_path, config_name + r"_test_3b"))
-                    # shape = union([shape, sensor])
                     shape = difference(shape, [tbcutout])
                     shape = union([shape, tb])
+                else:
+                    shape = difference(shape, [top_cutter])
+                    shape = difference(shape, [tbprecut, mount])
+                    tb = difference(tb, [tbcutout])
+                    shape = union([shape, tb])
+                    shape = difference(shape, [tbcutout])
+                    shape = union([shape, sensor])
 
                 if show_caps:
                     shape = add([shape, ball])
