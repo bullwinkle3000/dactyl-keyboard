@@ -1455,13 +1455,16 @@ def make_dactyl():
                       )
         return shape
 
+
     # todo mounts account for walls or walls account for mounts
     def encoder_wall_mount(shape, side='right'):
         encoder_row = encoder_wall_row  #  nrows - 3
         # row_position = key_position([0, 0, 0], -1, encoder_row)
         # row_position[1] += 10
         def low_prep_position(sh):
-            if side == "right":
+            if trackball_in_wall and (ball_side == side or ball_side == "both"):
+                return translate(rotate(sh, tbiw_encoder_wall_rotation), tbiw_encoder_wall_offset)
+            elif side == "right":
                 return translate(rotate(sh, right_encoder_wall_rotation), right_encoder_wall_offset)
 
             return translate(rotate(sh, left_encoder_wall_rotation), left_encoder_wall_offset)
