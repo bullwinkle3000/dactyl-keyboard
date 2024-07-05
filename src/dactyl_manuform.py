@@ -2517,13 +2517,12 @@ def make_dactyl():
             # inner_plate = cq.Workplane('XY').add(cq.Face.makeFromWires(inner_wire))
             if wedge_angle is not None:
                 cq.Workplane('XY').add(cq.Solid.revolve(outerWire, innerWires, angleDegrees, axisStart, axisEnd))
-            else:
+            elif not has_puck:
                 inner_shape = cq.Workplane('XY').add(
                     cq.Solid.extrudeLinear(inner_wire, [], cq.Vector(0, 0, base_thickness)))
                 inner_shape = translate(inner_shape, (0, 0, -base_rim_thickness))
                 if block_bottoms:
                     inner_shape = blockerize(inner_shape)
-
 
                 holes = []
                 for i in range(len(base_wires)):
@@ -2546,27 +2545,80 @@ def make_dactyl():
                 shape = difference(shape, hole_shapes)
                 shape = translate(shape, (0, 0, -base_rim_thickness))
                 shape = union([shape, inner_shape])
-                if controller_mount_type == "EXTERNAL_BREAKOUT":
-                    controller_shape = translate(box(36.5, 57.5, 5),
-                                                 (
-                                                     external_start[0] + external_holder_xoffset,
-                                                     external_start[1] + external_holder_yoffset - 24,
-                                                     external_holder_height / 2 - 7
-                                                 ))
-                    basic_holder = get_holder()
-                    if side == "left":
-                        basic_holder = mirror(basic_holder, 'YZ')
-                    holder = translate(basic_holder,
-                                       (
-                                           external_start[0] + external_holder_xoffset,
-                                           external_start[1] + external_holder_yoffset - 28.25,
-                                           external_holder_height / 2 - 1.5
-                                       ))
-                    shape = difference(shape, [controller_shape])
-                    shape = union([shape, holder])
 
-                if magnet_bottom:
-                    shape = difference(shape, [translate(magnet, (0, 0, 0.05 - (screw_insert_height / 2))) for magnet in list(tool)])
+            else:
+                inner_shape = cq.Workplane('XY').add(
+                    cq.Solid.extrudeLinear(inner_wire, [], cq.Vector(0, 0, base_rim_thickness)))
+                inner_shape = translate(inner_shape, (0, 0, -base_rim_thickness))
+                if block_bottoms:
+                    inner_shape = blockerize(inner_shape)
+
+                holes = []
+                for i in range(len(base_wires)):
+                    if i not in [inner_index, outer_index]:
+                        holes.append(base_wires[i])
+                cutout = [*holes, inner_wire]
+
+                shape = cq.Workplane('XY').add(
+                    cq.Solid.extrudeLinear(outer_wire, cutout, cq.Vector(0, 0, base_rim_thickness)))
+                hole_shapes = []
+                for hole in holes:
+                    loc = hole.Center()
+                    hole_shapes.append(
+                        translate(
+                            cylinder(screw_cbore_diameter / 2.0, screw_cbore_depth),
+                            (loc.x, loc.y, 0)
+                            # (loc.x, loc.y, screw_cbore_depth/2)
+                        )
+                    )
+                shape = difference(shape, hole_shapes)
+                shape = translate(shape, (0, 0, -base_rim_thickness))
+                shape = union([shape, inner_shape])
+                height = base_rim_thickness
+                # mount = (
+                #     wp()
+                #     .circle(20)
+                #     .workplane(offset=height)
+                #     .circle(12)
+                #     .loft(combine=True)
+                # )
+
+                screw = cylinder(2.69, 20)
+
+                mid_row = int(np.floor(nrows / 2))
+
+                pos = key_position([0, 0, 0], 0, mid_row)
+                pos[2] = -base_rim_thickness
+                pos[0] += (ncols * 6)
+                # mount = translate(mount, pos)
+                screw = translate(screw, pos)
+                # cut = translate(cylinder(10, 5), pos)
+
+                # shape = difference(shape, [cut])
+                # shape = union([shape, mount])
+                shape = difference(shape, [screw])
+
+            if controller_mount_type == "EXTERNAL_BREAKOUT":
+                controller_shape = translate(box(36.5, 57.5, 5),
+                                             (
+                                                 external_start[0] + external_holder_xoffset,
+                                                 external_start[1] + external_holder_yoffset - 24,
+                                                 external_holder_height / 2 - 7
+                                             ))
+                basic_holder = get_holder()
+                if side == "left":
+                    basic_holder = mirror(basic_holder, 'YZ')
+                holder = translate(basic_holder,
+                                   (
+                                       external_start[0] + external_holder_xoffset,
+                                       external_start[1] + external_holder_yoffset - 28.25,
+                                       external_holder_height / 2 - 1.5
+                                   ))
+                shape = difference(shape, [controller_shape])
+                shape = union([shape, holder])
+
+            if magnet_bottom:
+                shape = difference(shape, [translate(magnet, (0, 0, 0.05 - (screw_insert_height / 2))) for magnet in list(tool)])
 
             return shape
         else:
@@ -2604,7 +2656,8 @@ def make_dactyl():
         if quickly:
             print(">>>>>  QUICK RENDER: Only rendering a the right side and bottom plate.")
             return
-        export_dxf(shape=base, fname=path.join(save_path, right_name + r"_PLATE"))
+        if not has_puck:
+            export_dxf(shape=base, fname=path.join(save_path, right_name + r"_PLATE"))
 
         # rest = wrist_rest(mod_r, base, side="right")
         #
@@ -2619,7 +2672,8 @@ def make_dactyl():
 
         base_l = mirror(baseplate(walls_l, side='left'), 'YZ')
         export_file(shape=base_l, fname=path.join(save_path, left_name + r"_PLATE"))
-        export_dxf(shape=base_l, fname=path.join(save_path, left_name + r"_PLATE"))
+        if not has_puck:
+            export_dxf(shape=base_l, fname=path.join(save_path, left_name + r"_PLATE"))
 
         # else:
         #     export_file(shape=mirror(mod_r, 'YZ'), fname=path.join(save_path, config_name + r"_left"))
