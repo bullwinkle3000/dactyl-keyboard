@@ -14,6 +14,7 @@
   "centerrow_offset": 3,
   "keyboard_z_offset": 13,
   "wall_y_offset": 1,
+  "extra_height": 0.5,
   "wall_back_y_offset": 1,
   "left_wall_x_offset": 8,
   "left_wall_z_offset": 3,
