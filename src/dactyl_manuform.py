@@ -1367,6 +1367,21 @@ def make_dactyl():
             ])
         return shape
 
+    def left_notch(side="right"):
+
+        last_row = bottom_key(0)
+        shape = None
+
+        for i in range(last_row - 1):
+            piece = wall_at_angle(left_key_position(i, -1, side=side), left_key_position(i + 1, -1, side=side), 90, 90)
+            if shape is None:
+                shape = piece
+            else:
+                shape = union([shape, piece])
+
+
+        return shape
+
 
     def left_wall(side='right'):
         print('left_wall()')
@@ -1462,7 +1477,7 @@ def make_dactyl():
         return (
             union([
                 back_wall(),
-                # left_wall(side=side),
+                left_notch(side=side),
                 right_wall(),
                 front_wall(),
                 cluster(side=side).walls(side=side),
@@ -2375,30 +2390,38 @@ def make_dactyl():
         shape = translate(shape, [position[0], position[1], top_height / 2])
         return shape
 
-
-    def screw_insert_all_shapes(bottom_radius, top_radius, height, offset=0, side='right', hole=False):
+    def screw_insert_all_shapes(bottom_radius, top_radius, height, offset=0, side='right', hole=False, section="all"):
         print('screw_insert_all_shapes()')
         so = screw_offsets
         shape = (
-            translate(screw_insert(0, 0, bottom_radius, top_radius, height, side=side, hole=hole), (so[0][0], so[0][1], so[0][2] + offset)),  # rear left
+            translate(screw_insert(0, 0, bottom_radius, top_radius, height, side=side, hole=hole),
+                      (so[0][0], so[0][1], so[0][2] + offset)),  # rear left
             translate(screw_insert(0, lastrow - 1, bottom_radius, top_radius, height, side=side, hole=hole),
                       (so[1][0], so[1][1] + left_wall_lower_y_offset, so[1][2] + offset)),  # front left
             translate(screw_insert(3, lastrow, bottom_radius, top_radius, height, side=side, hole=hole),
                       (so[2][0], so[2][1], so[2][2] + offset)),  # front middle
-            translate(screw_insert(3, 0, bottom_radius, top_radius, height, side=side, hole=hole), (so[3][0], so[3][1], so[3][2] + offset)),  # rear middle
+            translate(screw_insert(3, 0, bottom_radius, top_radius, height, side=side, hole=hole),
+                      (so[3][0], so[3][1], so[3][2] + offset)),  # rear middle
             translate(screw_insert(lastcol, 0, bottom_radius, top_radius, height, side=side, hole=hole),
                       (so[4][0], so[4][1], so[4][2] + offset)),  # rear right
             translate(screw_insert(lastcol, lastrow - 1, bottom_radius, top_radius, height, side=side, hole=hole),
                       (so[5][0], so[5][1], so[5][2] + offset)),  # front right
-            translate(screw_insert_thumb(bottom_radius, top_radius, height, side=side, hole=hole), (so[6][0], so[6][1], so[6][2] + offset)),  # thumb cluster
+            translate(screw_insert_thumb(bottom_radius, top_radius, height, side=side, hole=hole),
+                      (so[6][0], so[6][1], so[6][2] + offset)),
         )
+
+        if section == "matrix":
+            return (shape[2], shape[3], shape[4], shape[5], shape[6])
+
+        if section == "left":
+            return (shape[0], shape[1])
 
         return shape
 
 
-    def screw_insert_holes(side='right'):
+    def screw_insert_holes(side='right', section="matrix"):
         return screw_insert_all_shapes(
-            screw_insert_bottom_radius, screw_insert_top_radius, screw_insert_height + .02, offset=-.01, side=side, hole=True
+            screw_insert_bottom_radius, screw_insert_top_radius, screw_insert_height + .02, offset=-.01, side=side, hole=True, section=section
         )
 
 
@@ -2407,7 +2430,17 @@ def make_dactyl():
             screw_insert_bottom_radius + 1.6,
             screw_insert_top_radius + 1.6,
             screw_insert_height + 1.5,
-            side=side
+            side=side,
+            section="matrix"
+        )
+
+    def left_screw_insert_outers(side="right"):
+        return screw_insert_all_shapes(
+            screw_insert_bottom_radius + 1.6,
+            screw_insert_top_radius + 1.6,
+            screw_insert_height + 1.5,
+            side=side,
+            section="left"
         )
 
 
@@ -2461,6 +2494,7 @@ def make_dactyl():
             export_file(shape=walls_shape, fname=path.join(r".", "things", r"debug_walls_shape"))
         s2 = union([base_walls_shape])
         s2 = union([s2, *screw_insert_outers(side=side)])
+        l_wall = union([l_wall, *left_screw_insert_outers(side=side)])
 
         if trrs_hole:
             s2 = difference(s2, [trrs_mount_point()])
@@ -2495,6 +2529,7 @@ def make_dactyl():
                 0  # do nothing, only here to expressly state inaction.
 
         s2 = difference(s2, [union(screw_insert_holes(side=side))])
+        l_wall = difference(l_wall, [union(screw_insert_holes(side=side, section="left"))])
 
         if side == "right" and logo_file not in ["", None]:
             s2 = union([s2, get_logo()])
@@ -2564,6 +2599,7 @@ def make_dactyl():
 
         block = translate(box(400, 400, 40), (0, 0, -20))
         shape = difference(shape, [block])
+        l_wall = difference(l_wall, [block])
 
         if show_caps:
             shape = add([shape, cluster(side).thumbcaps(side=side)])
@@ -2584,19 +2620,26 @@ def make_dactyl():
         return rest
 
     # NEEDS TO BE SPECIAL FOR CADQUERY
-    def baseplate(walls, wedge_angle=None, side='right'):
+    def baseplate(walls, l_wall, wedge_angle=None, side='right'):
         global logo_file
         if ENGINE == 'cadquery':
             # shape = mod_r
-            shape = union([walls, *screw_insert_outers(side=side)])
+            shape = union([walls, l_wall, *screw_insert_outers(side=side)])
             # tool = translate(screw_insert_screw_holes(side=side), [0, 0, -10])
             if magnet_bottom:
-                tool = screw_insert_all_shapes(screw_hole_diameter / 2., screw_hole_diameter / 2., 2.1, side=side)
+                tool = union([
+                    screw_insert_all_shapes(screw_hole_diameter / 2., screw_hole_diameter / 2., 2.1, side=side),
+                    screw_insert_left_wall(screw_hole_diameter / 2., screw_hole_diameter / 2., 2.1, side=side)
+                ])
                 for item in tool:
                     item = translate(item, [0, 0, 1.2])
                     shape = difference(shape, [item])
             else:
-                tool = screw_insert_all_shapes(screw_hole_diameter / 2., screw_hole_diameter / 2., 350, side=side)
+                tool = union([
+                    screw_insert_all_shapes(screw_hole_diameter / 2., screw_hole_diameter / 2., 350, side=side),
+                    screw_insert_left_wall(screw_hole_diameter / 2., screw_hole_diameter / 2., 350,
+                                                         side=side)
+                    ])
                 for item in tool:
                     item = translate(item, [0, 0, -10])
                     shape = difference(shape, [item])
@@ -2750,7 +2793,7 @@ def make_dactyl():
         right_name = get_descriptor_name_side(side="right")
         left_name = get_descriptor_name_side(side="left")
         mod_r, walls_r, left_wall_r = model_side(side="right")
-        base = baseplate(walls_r, side='right')
+        base = baseplate(walls_r, left_wall_r, side='right')
         rest_r = wrist_rest(mod_r, base, side="right")
 
         if resin and ENGINE == "cadquery":
@@ -2785,7 +2828,7 @@ def make_dactyl():
         export_file(shape=mod_l, fname=path.join(save_path, left_name + r"_TOP"))
         export_file(shape=left_wall_l, fname=path.join(save_path, left_name + r"_WALL"))
 
-        base_l = baseplate(walls_l, side='left')
+        base_l = baseplate(walls_l, left_wall_l, side='left')
         rest_l = mirror(wrist_rest(mod_l, base_l, side="left"), 'YZ')
         base_l = mirror(base_l, "YZ")
 
