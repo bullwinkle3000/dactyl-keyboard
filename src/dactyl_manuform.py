@@ -1370,17 +1370,28 @@ def make_dactyl():
     def left_notch(side="right"):
 
         last_row = bottom_key(0)
-        shape = None
+        # shape = None
+        hulls = []
+        wall_thickness = 3
+        z_offset = 0
+        wall_angle_from = 90
+        wall_angle_to = 90
+        for i in range(last_row):
+            from_pos = left_key_position(i, 0, side=side)
+            to_pos = left_key_position(i, -1, side=side)
+            edge_from = offset_point(from_pos, wall_angle_from, z_offset, wall_thickness)
+            edge_to = offset_point(to_pos, wall_angle_to, z_offset - 3, wall_thickness)
 
-        for i in range(last_row - 1):
-            piece = wall_at_angle(left_key_position(i, -1, side=side), left_key_position(i + 1, -1, side=side), 90, 90)
-            if shape is None:
-                shape = piece
-            else:
-                shape = union([shape, piece])
+            hulls.append(hull_from_shapes(
+                wall_section(from_pos, to_pos, edge_from, edge_to, wall_angle_from, wall_angle_to, z_offset, wall_thickness)))
+            # piece = wall_at_angle(left_key_position(i, -1, side=side), left_key_position(i + 1, -1, side=side), 90, 90)
+            # if shape is None:
+            #     shape = piece
+            # else:
+            #     shape = union([shape, piece])
 
 
-        return shape
+        return union(hulls)
 
 
     def left_wall(side='right'):
@@ -2474,10 +2485,10 @@ def make_dactyl():
         shape = union([key_holes(side=side)])
         if debug_exports:
             export_file(shape=shape, fname=path.join(r".", "things", r"debug_key_plates"))
-        connector_shape = connectors()
-        shape = union([shape, connector_shape])
-        if debug_exports:
-            export_file(shape=shape, fname=path.join(r".", "things", r"debug_connector_shape"))
+        # connector_shape = connectors()
+        # shape = union([shape, connector_shape])
+        # if debug_exports:
+        #     export_file(shape=shape, fname=path.join(r".", "things", r"debug_connector_shape"))
         thumb_shape = cluster(side).thumb(side=side)
         if debug_exports:
             export_file(shape=thumb_shape, fname=path.join(r".", "things", r"debug_thumb_shape"))
