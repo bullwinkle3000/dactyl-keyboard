@@ -1,7 +1,7 @@
 {
   "tb_socket_translation_offset": [
     0,
-    0,
+    2,
     0
   ],
   "tb_socket_rotation_offset": [
@@ -12,7 +12,7 @@
   "tbiw_translational_offset": [
     -6,
     -24,
-    -10
+    -5
   ],
   "tbiw_rotation_offset": [
     40,
