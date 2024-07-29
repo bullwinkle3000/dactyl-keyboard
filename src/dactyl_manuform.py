@@ -2705,7 +2705,7 @@ def make_dactyl():
 
         # export_file(shape=puck_plate(), fname=path.join(save_path, config_name + r"_puck_plate"))
 
-        if ENGINE != "cadquery":
+        if ENGINE != "cadquery" and render_png:
             render_samples(overrides_name, ncols, save_path)
 
     all_merged = locals().copy()
