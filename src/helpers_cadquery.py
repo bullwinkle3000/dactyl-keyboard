@@ -84,6 +84,9 @@ def intersect(shape1, shape2):
     return shape1.intersect(shape2)
 
 
+def solidify(shape):
+    return cq.Solid.makeSolid(shape)
+
 def face_from_points(points):
     # debugprint('face_from_points()')
     edges = []
@@ -211,6 +214,10 @@ def extrude_poly(outer_poly, inner_polys=None, height=1):  # vector=(0,0,1)):
 
     return cq.Workplane('XY').add(
         cq.Solid.extrudeLinear(outerWire=outer_wires, innerWires=inner_wires, vecNormal=cq.Vector(0, 0, height)))
+
+
+def soften(shape, mm=0.5):
+    return shape.edges().fillet(mm)
 
 
 def import_file(fname, convexity=None):

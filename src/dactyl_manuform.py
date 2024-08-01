@@ -17,6 +17,8 @@ from clusters.minithicc import Minithicc
 from clusters.minithicc3 import Minithicc3
 from clusters.trackball_orbyl import TrackballOrbyl
 from clusters.trackball_two import TrackballTwo
+from clusters.trackball_orbyl5 import TrackballOrbyl5
+from clusters.trackball_wilder import TrackballWild
 from clusters.trackball_three import TrackballThree
 from clusters.trackball_wilder import TrackballWild
 from clusters.trackball_cj import TrackballCJ
@@ -193,8 +195,16 @@ def make_dactyl():
             #     left_wall_x_offset = oled_left_wall_x_offset_override
             #     short = tbiw_left_wall_x_offset_override  - 5# HACKISH
 
-            offsets[nrows - 1] = wide
-            offsets[nrows - 2] = wide
+            offsets[nrows - 4] = wide
+            offsets[nrows - 5] = wide
+            offsets[nrows - 3] = wide
+
+            if not all_last_rows:
+                # offsets[nrows - 3] = wide
+                shift_at = nrows - 3
+            else:
+                shift_at = nrows - 3
+
             # offsets[nrows - 1] = wide
             # if nrows == 3:
             #     offsets = [short, wide, wide, wide]
@@ -1505,7 +1515,7 @@ def make_dactyl():
         elif encoder_type(side) == "wheel":
             wheel_width = 17.3
             wheel_height = 15
-            wheel_cut_low = box(wheel_width, wheel_height, 8)
+            wheel_cut_low = box(wheel_width, wheel_height, 15)
             wheel_mount_low = translate(difference(box(wheel_width + 4, wheel_height + 4, 3), [wheel_cut_low]), (0, 0, -2))
             # wheel_cut_low = key_place(box(17.2, 13.5, 8), -1, encoder_row)
 
@@ -1528,7 +1538,7 @@ def make_dactyl():
 
             shape = difference(shape, [wheel_cut_low])
             shape = union([shape, wheel_mount_low])
-            export_file(shape=wheel_mount_low, fname=path.join(r".", "things", r"wheel_encoder_mount"))
+            # export_file(shape=wheel_mount_low, fname=path.join(r".", "things", r"wheel_encoder_mount"))
             # shape = union([shape, ec11_mount_low])
             # encoder_mount = translate(rotate(encoder_mount, (0, 0, 20)), (-27, -4, -15))
             return shape
@@ -1543,20 +1553,46 @@ def make_dactyl():
         debugprint('usb_c_hole()')
         return usb_c_shape(usb_c_width, usb_c_height, 20)
 
-    def usb_c_mount_point():
-        width = usb_c_width * 1.2
-        height = usb_c_height * 1.2
-        front_bit = translate(usb_c_shape(usb_c_width + 2, usb_c_height + 2, wall_thickness / 2), (0, (wall_thickness / 2) + 1, 0))
-        shape = union([front_bit, usb_c_hole()])
-        shape = rotate(shape, [0, 0, usb_c_zrotate])
-        shape = translate(shape,
+    def usb_c_insert(data):
+        mount = import_file(path.join(parts_path, "mounts", "usb_c_mount"))
+        mount = rotate(mount, data["rot"])
+        return translate(mount,
                           (
-                              usb_holder_position[0] + usb_c_xoffset,
-                              usb_holder_position[1] + usb_c_yoffset,
+                              usb_holder_position[0] + data["pos"][0],
+                              usb_holder_position[1] + data["pos"][1],
                               usb_c_zoffset,
                           )
                           )
+
+    def usb_c_hole(data):
+        debugprint('usb_c_hole()')
+        shape = usb_c_shape(usb_c_width, usb_c_height, 20)
+        shape = translate(shape, data["pos"])
+        shape = rotate(shape, data["rot"])
         return shape
+
+    def usb_c_mount_point(data):
+        width = 6
+        height = 17
+        shape = box(width, height, 20)
+        shape = rotate(shape, data["rot"])
+        return translate(shape,
+                          (
+                              usb_holder_position[0] + data["pos"][0],
+                              usb_holder_position[1] + data["pos"][1],
+                              usb_c_zoffset,
+                          )
+                          )
+        # front_bit = translate(usb_c_shape(usb_c_width + 2, usb_c_height + 2, wall_thickness / 2), (0, (wall_thickness / 2) + 1, 0))
+        # shape = union([front_bit, usb_c_hole()])
+        # shape = translate(shape,
+        #                   (
+        #                       usb_holder_position[0] + usb_c_xoffset,
+        #                       usb_holder_position[1] + usb_c_yoffset,
+        #                       usb_c_zoffset,
+        #                   )
+        #                   )
+        # return shape
 
     external_start = list(
         # np.array([0, -3, 0])
@@ -1648,6 +1684,9 @@ def make_dactyl():
         if btus:
             tb_file = path.join(parts_path, r"phat_btu_socket")
             tbcut_file = path.join(parts_path, r"phatter_btu_socket_cutter")
+        elif ceramic:
+            tb_file = path.join(parts_path, r"socket_btu")
+            tbcut_file = path.join(parts_path, r"btu_cutter")
         else:
             tb_file = path.join(parts_path, r"trackball_socket_body_34mm")
             tbcut_file = path.join(parts_path, r"trackball_socket_cutter_34mm")
@@ -1657,7 +1696,7 @@ def make_dactyl():
         else:
             sens_file = path.join(parts_path, r"trackball_sensor_mount")
 
-        senscut_file = path.join(parts_path, r"trackball_sensor_cutter_short")
+        senscut_file = path.join(parts_path, r"trackball_sensor_cutter")
 
         # shape = import_file(tb_file)
         # # shape = difference(shape, [import_file(senscut_file)])
@@ -2366,7 +2405,13 @@ def make_dactyl():
                 s2 = difference(s2, [usb_holder_hole()])
 
             if controller_mount_type in ['USB_C_WALL']:
-                s2 = difference(s2, [usb_c_mount_point()])
+                for data in usb_c_mounts[side]:
+                    s2 = difference(s2, [usb_c_mount_point(data)])
+                    s2 = union([s2, usb_c_insert(data)])
+
+            # if controller_mount_type in ['USB_C_WALL']:
+            #     s2 = difference(s2, [usb_c_mount_point()])
+            #     s2 = union([s2, usb_c_insert()])
 
             if controller_mount_type in ['RJ9_USB_TEENSY', 'RJ9_USB_WALL']:
                 s2 = difference(s2, [rj9_space()])
@@ -2403,8 +2448,7 @@ def make_dactyl():
                 hole, frame = oled_sliding_mount_frame(side=side)
                 shape = difference(shape, [hole])
                 shape = union([shape, frame])
-                # if encoder_in_wall:
-                #     shape = encoder_wall_mount(shape, side)
+
 
             elif oled_mount_type == "CLIP":
                 hole, frame = oled_clip_mount_frame(side=side)
@@ -2449,7 +2493,7 @@ def make_dactyl():
                 if show_caps:
                     shape = add([shape, ball])
 
-        block = translate(box(300, 300, 40), (0, 0, -20))
+        block = translate(box(400, 400, 40), (0, 0, -20))
         shape = difference(shape, [block])
 
         if show_caps:
@@ -2461,11 +2505,13 @@ def make_dactyl():
 
         return shape, walls_shape
 
-    def wrist_rest(base, plate, side="right"):
-        rest = import_file(path.join(parts_path, "dactyl_wrist_rest_v3_" + side))
+    def wrist_rest(top, plate, side="right"):
+        rest = import_file(path.join(parts_path, "dactyl_wrist_rest_v3_right"))
         rest = rotate(rest, (0, 0, -60))
-        rest = translate(rest, (30, -150, 26))
-        rest = union([rest, translate(base, (0, 0, 5)), plate])
+        rest = translate(rest, (30, -160, 26))
+        # solid = union([plate, translate(top, (0, 0, 5))])
+        rest = difference(rest, [translate(top, (0, 0, -0.5))])
+        # rest = union([rest, plate])
         return rest
 
     # NEEDS TO BE SPECIAL FOR CADQUERY
@@ -2642,22 +2688,26 @@ def make_dactyl():
         right_name = get_descriptor_name_side(side="right")
         left_name = get_descriptor_name_side(side="left")
         mod_r, walls_r = model_side(side="right")
+        base = baseplate(walls_r, side='right')
+        rest_r = wrist_rest(mod_r, base, side="right")
+
         if resin and ENGINE == "cadquery":
             mod_r = rotate(mod_r, (333.04, 43.67, 85.00))
         export_file(shape=mod_r, fname=path.join(save_path, right_name + r"_TOP"))
 
+        # print(f"Right descriptor name: {get_descriptor_name_side(side='right')}")
+        # print(f"Left descriptor name: {get_descriptor_name_side(side='left')}")
         if right_side_only:
             print(">>>>>  RIGHT SIDE ONLY: Only rendering a the right side.")
             return
-        base = baseplate(walls_r, side='right')
-        # rest = wrist_rest(mod_r, base, side="right")
+
         # base = union([base, rest])
         export_file(shape=base, fname=path.join(save_path, right_name + r"_PLATE"))
+        export_file(shape=rest_r, fname=path.join(save_path, right_name + r"_WRIST_REST"))
         if quickly:
             print(">>>>>  QUICK RENDER: Only rendering a the right side and bottom plate.")
             return
-        if not has_puck:
-            export_dxf(shape=base, fname=path.join(save_path, right_name + r"_PLATE"))
+        # export_dxf(shape=base, fname=path.join(save_path, right_name + r"_PLATE"))
 
         # rest = wrist_rest(mod_r, base, side="right")
         #
@@ -2666,15 +2716,21 @@ def make_dactyl():
         # if symmetry == "asymmetric":
 
         mod_l, walls_l = model_side(side="left")
+
         if resin and ENGINE == "cadquery":
             mod_l = rotate(mod_l, (333.04, 317.33, 286.35))
+
         export_file(shape=mod_l, fname=path.join(save_path, left_name + r"_TOP"))
 
-        base_l = mirror(baseplate(walls_l, side='left'), 'YZ')
-        export_file(shape=base_l, fname=path.join(save_path, left_name + r"_PLATE"))
-        if not has_puck:
-            export_dxf(shape=base_l, fname=path.join(save_path, left_name + r"_PLATE"))
+        base_l = baseplate(walls_l, side='left')
+        rest_l = mirror(wrist_rest(mod_l, base_l, side="left"), 'YZ')
+        base_l = mirror(base_l, "YZ")
 
+
+
+        export_file(shape=base_l, fname=path.join(save_path, left_name + r"_PLATE"))
+        # export_dxf(shape=base_l, fname=path.join(save_path, left_name + r"_PLATE"))
+        export_file(shape=rest_l, fname=path.join(save_path, left_name + r"_WRIST_REST"))
         # else:
         #     export_file(shape=mirror(mod_r, 'YZ'), fname=path.join(save_path, config_name + r"_left"))
         #
@@ -2703,8 +2759,6 @@ def make_dactyl():
             # export_file(shape=union((oled_clip_mount_frame()[1], oled_clip())),
             #             fname=path.join(save_path, config_name + r"_oled_clip_assy_test"))
 
-        # export_file(shape=puck_plate(), fname=path.join(save_path, config_name + r"_puck_plate"))
-
         if ENGINE != "cadquery" and render_png:
             render_samples(overrides_name, ncols, save_path)
 
@@ -2727,6 +2781,8 @@ def make_dactyl():
             clust = Minithicc3(all_merged)
         elif style == TrackballOrbyl.name():
             clust = TrackballOrbyl(all_merged)
+        elif style == TrackballOrbyl5.name():
+            clust = TrackballOrbyl5(all_merged)
         elif style == TrackballWild.name():
             clust = TrackballWild(all_merged)
         elif style == TrackballThree.name():

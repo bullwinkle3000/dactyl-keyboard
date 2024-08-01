@@ -24,6 +24,10 @@ def cone(r1, r2, height):
     return sl.cylinder(r1=r1, r2=r2, h=height, center=True)  # , center=True)
 
 
+def solidify(shape):
+    return shape
+
+
 def rotate(shape, angle):
     return sl.rotate(angle)(shape)
 
