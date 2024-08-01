@@ -8,6 +8,7 @@
   "logo_file": null,
   "show_caps": false,
   "show_pcbs": false,
+  "color": "yellow",
   "resin": false,
   "nrows": 6,
   "ncols": 6,
@@ -114,6 +115,7 @@
     -20.0
   ],
   "has_btus": false,
+  "ceramic": false,
   "tb_btu_socket_rotation_offset": [
     0,
     0,
@@ -180,6 +182,8 @@
   "nub_keyswitch_width": 14.4,
   "undercut_keyswitch_height": 14.0,
   "undercut_keyswitch_width": 14.0,
+  "choc_keyswitch_height": 13.9,
+  "choc_keyswitch_width": 13.9,
   "plate_chamfer": 0.6,
   "notch_width": 5.0,
   "sa_profile_key_height": 12.7,
@@ -227,6 +231,32 @@
   "blackpill_holder_xoffset": -6.5,
   "external_holder_xoffset": -5.0,
   "external_holder_yoffset": -4.5,
+  "usb_c_mounts": {
+    "right": [
+    {
+      "type": "clip_in",
+      "pos": [-6, -1, 8],
+      "rot": [0, 90, 0]
+    },
+    {
+      "type": "clip_in",
+      "pos": [-66, -5, 8],
+      "rot": [0, 90, 6]
+    }
+  ],
+    "left": [
+    {
+      "type": "clip_in",
+      "pos": [-6, -1, 8],
+      "rot": [0, 90, 0]
+    },
+    {
+      "type": "clip_in",
+      "pos": [-66, -5, 8],
+      "rot": [0, 90, 6]
+    }
+  ]
+  },
   "usb_c_width": 9.5,
   "usb_c_height": 3.5,
   "usb_c_xoffset": -3,

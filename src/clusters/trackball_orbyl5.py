@@ -143,7 +143,7 @@ class TrackballOrbyl5(DefaultCluster):
         t_off = self.key_translation_offsets[1]
         shape = rotate(shape, self.key_rotation_offsets[1])
         shape = translate(shape, (t_off[0], t_off[1] + self.key_diameter / 2, t_off[2]))
-        shape = rotate(shape, [0,0,-120])
+        shape = rotate(shape, [0,0,-115])
         shape = self.track_place(shape)
 
         return shape
@@ -153,7 +153,7 @@ class TrackballOrbyl5(DefaultCluster):
         shape = rotate(shape, self.key_rotation_offsets[2])
         t_off = self.key_translation_offsets[2]
         shape = translate(shape, (t_off[0], t_off[1] + self.key_diameter/2, t_off[2]))
-        shape = rotate(shape, [0,0,-160])
+        shape = rotate(shape, [0,0,-150])
         shape = self.track_place(shape)
 
         return shape
@@ -173,7 +173,7 @@ class TrackballOrbyl5(DefaultCluster):
         shape = rotate(shape, self.key_rotation_offsets[4])
         t_off = self.key_translation_offsets[4]
         shape = translate(shape, (t_off[0], t_off[1]+self.key_diameter/2, t_off[2]))
-        shape = rotate(shape, [0,0,-200])
+        shape = rotate(shape, [0,0,-185])
         shape = self.track_place(shape)
 
         return shape
@@ -184,7 +184,40 @@ class TrackballOrbyl5(DefaultCluster):
         shape = rotate(shape, self.key_rotation_offsets[5])
         t_off = self.key_translation_offsets[5]
         shape = translate(shape, (t_off[0], t_off[1]+self.key_diameter/2, t_off[2]))
-        shape = rotate(shape, [0,0,-240])
+        shape = rotate(shape, [0,0,-220])
+        shape = self.track_place(shape)
+
+        return shape
+
+    def bl2_place(self, shape):
+        debugprint('thumb_bl_place()')
+        shape = rotate(shape, [0, 0, 180])
+        shape = rotate(shape, self.key_rotation_offsets[5])
+        t_off = self.key_translation_offsets[5]
+        shape = translate(shape, (t_off[0], t_off[1]+self.key_diameter/2, t_off[2]))
+        shape = rotate(shape, [0,0,-255])
+        shape = self.track_place(shape)
+
+        return shape
+
+    def bl3_place(self, shape):
+        debugprint('thumb_bl_place()')
+        shape = rotate(shape, [0, 0, 180])
+        shape = rotate(shape, self.key_rotation_offsets[5])
+        t_off = self.key_translation_offsets[5]
+        shape = translate(shape, (t_off[0], t_off[1]+self.key_diameter/2, t_off[2]))
+        shape = rotate(shape, [0,0,-290])
+        shape = self.track_place(shape)
+
+        return shape
+
+    def bl4_place(self, shape):
+        debugprint('thumb_bl_place()')
+        shape = rotate(shape, [0, 0, 180])
+        shape = rotate(shape, self.key_rotation_offsets[5])
+        t_off = self.key_translation_offsets[5]
+        shape = translate(shape, (t_off[0], t_off[1]+self.key_diameter/2, t_off[2]))
+        shape = rotate(shape, [0,0,-325])
         shape = self.track_place(shape)
 
         return shape
@@ -198,6 +231,9 @@ class TrackballOrbyl5(DefaultCluster):
             # self.m2_place(rotate(shape, [0, 0, self.thumb_plate_ml_rotation])),
             self.bl_place(rotate(shape, [0, 0, self.thumb_plate_bl_rotation])),
             self.br_place(rotate(shape, [0, 0, self.thumb_plate_br_rotation])),
+            self.bl2_place(rotate(shape, [0, 0, self.thumb_plate_br_rotation])),
+            self.bl3_place(rotate(shape, [0, 0, self.thumb_plate_br_rotation])),
+            self.bl4_place(rotate(shape, [0, 0, self.thumb_plate_br_rotation])),
         ])
 
     def thumb_fx_layout(self, shape):
@@ -222,6 +258,25 @@ class TrackballOrbyl5(DefaultCluster):
                          [0.5*(radius - post_adj), 0.866*(radius - post_adj), 0]
                          )
 
+    def tb_post_tl4(self):
+        debugprint('post_tl4()')
+        radius = ball_diameter/2+ball_wall_thickness + ball_gap
+        return translate(web_post(),
+                         [-0.2*(radius - post_adj), 0.96*(radius - post_adj), 0]
+                         )
+
+    def tb_post_tl3(self):
+        debugprint('post_tl3()')
+        radius = ball_diameter/2+ball_wall_thickness + ball_gap
+        return translate(web_post(),
+                         [-0.4*(radius - post_adj), 0.9*(radius - post_adj), 0]
+                         )
+    def tb_post_tl2(self):
+        debugprint('post_tl2()')
+        radius = ball_diameter/2+ball_wall_thickness + ball_gap
+        return translate(web_post(),
+                         [-0.45*(radius - post_adj), 0.88*(radius - post_adj), 0]
+                         )
 
     def tb_post_tl(self):
         debugprint('post_tl()')
@@ -229,7 +284,6 @@ class TrackballOrbyl5(DefaultCluster):
         return translate(web_post(),
                          [-0.5*(radius - post_adj), 0.866*(radius - post_adj), 0]
                          )
-
 
     def tb_post_l(self):
         debugprint('post_l()')
@@ -271,9 +325,19 @@ class TrackballOrbyl5(DefaultCluster):
         hulls.append(
             triangle_hulls(
                 [
-                    self.track_place(self.tb_post_l()),
-                    self.bl_place(web_post_tl()),
-                    self.track_place(self.tb_post_bl()),
+                    self.track_place(self.tb_post_tl4()),
+                    self.bl4_place(web_post_tl()),
+                    self.track_place(self.tb_post_tl3()),
+                    self.bl4_place(web_post_tr()),
+                    self.track_place(self.tb_post_tl3()),
+                    self.bl3_place(web_post_tl()),
+                    self.track_place(self.tb_post_tl2()),
+                    self.bl3_place(web_post_tr()),
+                    self.track_place(self.tb_post_tl2()),
+                    self.bl2_place(web_post_tl()),
+                    self.track_place(self.tb_post_tl()),
+                    self.bl2_place(web_post_tr()),
+                    self.track_place(self.tb_post_tl()),
                     self.bl_place(web_post_tr()),
                     self.br_place(web_post_tl()),
                     self.track_place(self.tb_post_bl()),
@@ -298,6 +362,39 @@ class TrackballOrbyl5(DefaultCluster):
             )
         )
 
+        hulls.append(
+            triangle_hulls(
+                [
+                    self.bl4_place(web_post_tr()),
+                    self.bl3_place(web_post_tl()),
+                    self.bl4_place(web_post_br()),
+                    self.bl3_place(web_post_bl()),
+                ]
+            )
+        )
+
+
+        hulls.append(
+            triangle_hulls(
+                [
+                    self.bl3_place(web_post_tr()),
+                    self.bl2_place(web_post_tl()),
+                    self.bl3_place(web_post_br()),
+                    self.bl2_place(web_post_bl()),
+                ]
+            )
+        )
+
+        hulls.append(
+            triangle_hulls(
+                [
+                    self.bl2_place(web_post_tr()),
+                    self.bl_place(web_post_tl()),
+                    self.bl2_place(web_post_br()),
+                    self.bl_place(web_post_bl()),
+                ]
+            )
+        )
         # bottom left
         hulls.append(
             triangle_hulls(
@@ -399,21 +496,51 @@ class TrackballOrbyl5(DefaultCluster):
         )])
 
         shape = union([shape, wall_brace(
-            self.track_place, -1.5, 0, self.tb_post_tl(),
+            self.bl_place, -1, -1, web_post_bl(),
+            self.bl2_place, -1, -1, web_post_br(),
+        )])
+
+        shape = union([shape, wall_brace(
+            self.bl2_place, -1, -1, web_post_br(),
+            self.bl2_place, -0.5, -0.7, web_post_bl(),
+        )])
+
+        shape = union([shape, wall_brace(
+            self.bl2_place, -0.5, -0.7, web_post_bl(),
+            self.bl3_place, -0.7, -0.7, web_post_br(),
+        )])
+
+        shape = union([shape, wall_brace(
+            self.bl3_place, -0.7, -0.7, web_post_br(),
+            self.bl3_place, -0.25, -0.6, web_post_bl(),
+        )])
+
+        shape = union([shape, wall_brace(
+            self.bl3_place, -0.25, -0.6, web_post_bl(),
+            self.bl4_place, -0.25, -0.5, web_post_br(),
+        )])
+
+        shape = union([shape, wall_brace(
+            self.bl4_place, -0.25, -0.5, web_post_br(),
+            self.bl4_place, 0, -0.3, web_post_bl(),
+        )])
+
+        shape = union([shape, wall_brace(
+            self.track_place, -1.5, 0, self.tb_post_tl4(),
             (lambda sh: left_cluster_key_place(sh, lastrow - 1, -1, side=ball_side, low_corner=True)), -1, 0, web_post(),
         )])
-        shape = union([shape, wall_brace(
-            self.track_place, -1.5, 0, self.tb_post_tl(),
-            self.track_place, -1, 0, self.tb_post_l(),
-        )])
-        shape = union([shape, wall_brace(
-            self.track_place, -1, 0, self.tb_post_l(),
-            self.bl_place, -1, 0, web_post_tl(),
-        )])
-        shape = union([shape, wall_brace(
-            self.bl_place, -1, 0, web_post_tl(),
-            self.bl_place, -1, -1, web_post_bl(),
-        )])
+        # shape = union([shape, wall_brace(
+        #     self.track_place, -1.5, 0, self.tb_post_tl(),
+        #     self.track_place, -1, 0, self.tb_post_l(),
+        # )])
+        # shape = union([shape, wall_brace(
+        #     self.track_place, -1, 0, self.tb_post_l(),
+        #     self.bl_place, -1, 0, web_post_tl(),
+        # )])
+        # shape = union([shape, wall_brace(
+        #     self.bl_place, -1, 0, web_post_tl(),
+        #     self.bl_place, -1, -1, web_post_bl(),
+        # )])
 
         return shape
 
