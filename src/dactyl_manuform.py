@@ -21,6 +21,7 @@ from clusters.trackball_orbyl5 import TrackballOrbyl5
 from clusters.trackball_wilder import TrackballWild
 from clusters.trackball_three import TrackballThree
 from clusters.trackball_wilder import TrackballWild
+from clusters.keypad_cluster import KeypadCluster
 from clusters.trackball_cj import TrackballCJ
 from clusters.custom_cluster import CustomCluster
 from clusters.trackball_btu import TrackballBTU
@@ -2787,6 +2788,8 @@ def make_dactyl():
             clust = TrackballWild(all_merged)
         elif style == TrackballThree.name():
             clust = TrackballThree(all_merged)
+        elif style == KeypadCluster.name():
+            clust = KeypadCluster(all_merged)
         elif style == TrackballTwo.name():
             clust = TrackballTwo(all_merged)
         elif style == TrackballBTU.name():
