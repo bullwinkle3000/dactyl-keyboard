@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 
+
 def deg2rad(degrees: float) -> float:
     return degrees * np.pi / 180
 

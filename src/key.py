@@ -1,5 +1,6 @@
 from geom import *
 from part import Part
+from common import *
 
 
 SIZES = {
@@ -8,7 +9,6 @@ SIZES = {
 }
 
 KEY_NONE = None
-
 
 class Key(Part):
     type = "MX"
@@ -97,6 +97,10 @@ class Key(Part):
     def get_walls(self):
         return self.walls.copy()
 
+    def update_key_pos_rot(self, pos, rot):
+        self.pos = combine(self.pos, pos)
+        self.rot = combine(self.rot, rot)
+
     def add_wall(self, wall):
         if wall not in ["top", "left", "right", "bottom"]:
             raise Exception("wall must be top, left, right, or bottom")
@@ -106,20 +110,22 @@ class Key(Part):
 
         self.walls.append(wall)
 
-    def is_corner(self):
+    def get_corner(self):
+        corners = []
+
         if "left" in self.walls and "top" in self.walls:
-            return True
+            corners.append("tl")
 
         if "left" in self.walls and "bottom" in self.walls:
-            return True
+            corners.append("bl")
 
         if "right" in self.walls and "top" in self.walls:
-            return True
+            corners.append("tr")
 
         if "right" in self.walls and "bottom" in self.walls:
-            return True
+            corners.append("br")
 
-        return False
+        return corners
 
     def add_neighbor(self, neighbor, side):
         if side not in ["t", "r", "l", "b", "tr", "br", "tl", "bl"]:
@@ -271,7 +277,6 @@ class Key(Part):
         self._d_vec = [d / dist for d in origin]
         # print(f"{self.get_id()}: pos={self.pos}, offset={self.offset_point([0, 0, -3])}")
         return [self.pos, self.rot]
-
 
     def render(self, plate_file, side="right"):
         if plate_style in ['NUB', 'HS_NUB']:
