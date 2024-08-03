@@ -1,7 +1,5 @@
 from geom import *
 from part import Part
-from common import *
-
 
 SIZES = {
     "MX": {"w": 14, "h": 14, "d": 10},
@@ -27,6 +25,9 @@ class Key(Part):
         if parent_locals is not None:
             for item in parent_locals:
                 globals()[item] = parent_locals[item]
+        if parent_locals is not None:
+            self.width = mount_width
+            self.height = mount_height
 
     def __str__(self):
         return f'K-{self.get_id()}'
@@ -36,53 +37,33 @@ class Key(Part):
         new_offset = self._rot_transform.apply(offset)
         return add_translate(self._pos, offset)
 
-    def set_rot(self, new_rot):
-        self._rot = new_rot
-        self._rot_transform = get_rotation_transform(new_rot)
+    # def set_rot(self, new_rot):
+    #     self._rot = new_rot
+    #     self._rot_transform = get_rotation_transform(new_rot)
 
-    def center(self, off=(0, 0, 0)):
-        offset = rotate_deg(off, self._rot)
-        return add_translate(self._pos, offset)
+    # def center(self, off=(0, 0, 0)):
+    #     offset = rotate_deg(off, self._rot)
+    #     return add_translate(self._pos, offset)
 
-    def tr_wide(self, off=(0, 0, 0)):
-        # return self._offset_point(mount_width / 2.0, mount_height / 2.0, off)
-        offset = rotate_deg([(mount_width / 2.0) + off[0], (mount_height / 2) + off[1], off[2]], self._rot)
-        return add_translate(self._pos, offset)
-
-    def tl_wide(self, off=(0, 0, 0)):
-        # return self._offset_point(-mount_width / 2.0, mount_height / 2.0, off)
-        offset = rotate_deg([-(mount_width / 2.0) - off[0], (mount_height / 2) + off[1], off[2]], self._rot)
-        return add_translate(self._pos, offset)
-
-    def br_wide(self, off=(0, 0, 0)):
-        # return self._offset_point(mount_width / 2.0, -mount_height / 2.0, off)
-        offset = rotate_deg([(mount_width / 2.0) + off[0], -(mount_height / 2) - off[1], off[2]], self._rot)
-        return add_translate(self._pos, offset)
-
-    def bl_wide(self, off=(0, 0, 0)):
-        # (-mount_width / 2.0, -mount_height / 2.0, off)
-        offset = rotate_deg([-(mount_width / 2.0) - off[0], -(mount_height / 2) - off[1], off[2]], self._rot)
-        return add_translate(self._pos, offset)
-
-    def tr(self, off):
-        # return self._offset_point(mount_width / 2.0, mount_height / 2.0, off)
-        offset = rotate_deg([(mount_width / 2.0) + off[0], (mount_height / 2) + off[1], off[2]], self._rot)
-        return add_translate(self._pos, offset)
-
-    def tl(self, off):
-        # return self._offset_point(-mount_width / 2.0, mount_height / 2.0, off)
-        offset = rotate_deg([-(mount_width / 2.0) + off[0], (mount_height / 2) + off[1], off[2]], self._rot)
-        return add_translate(self._pos, offset)
-
-    def br(self, off):
-        # return self._offset_point(mount_width / 2.0, -mount_height / 2.0, off)
-        offset = rotate_deg([(mount_width / 2.0) + off[0], -(mount_height / 2) + off[1], off[2]], self._rot)
-        return add_translate(self._pos, offset)
-
-    def bl(self, off):
-        # (-mount_width / 2.0, -mount_height / 2.0, off)
-        offset = rotate_deg([-(mount_width / 2.0) + off[0], -(mount_height / 2) + off[1], off[2]], self._rot)
-        return add_translate(self._pos, offset)
+    # def tr(self, off):
+    #     # return self._offset_point(mount_width / 2.0, mount_height / 2.0, off)
+    #     offset = rotate_deg([(mount_width / 2.0) + off[0], (mount_height / 2) + off[1], off[2]], self._rot)
+    #     return add_translate(self._pos, offset)
+    #
+    # def tl(self, off):
+    #     # return self._offset_point(-mount_width / 2.0, mount_height / 2.0, off)
+    #     offset = rotate_deg([-(mount_width / 2.0) + off[0], (mount_height / 2) + off[1], off[2]], self._rot)
+    #     return add_translate(self._pos, offset)
+    #
+    # def br(self, off):
+    #     # return self._offset_point(mount_width / 2.0, -mount_height / 2.0, off)
+    #     offset = rotate_deg([(mount_width / 2.0) + off[0], -(mount_height / 2) + off[1], off[2]], self._rot)
+    #     return add_translate(self._pos, offset)
+    #
+    # def bl(self, off):
+    #     # (-mount_width / 2.0, -mount_height / 2.0, off)
+    #     offset = rotate_deg([-(mount_width / 2.0) + off[0], -(mount_height / 2) + off[1], off[2]], self._rot)
+    #     return add_translate(self._pos, offset)
 
     def is_wall_key(self):
         return len(self.walls) > 0
@@ -95,10 +76,6 @@ class Key(Part):
 
     def get_walls(self):
         return self.walls.copy()
-
-    def update_key_pos_rot(self, pos, rot):
-        self.pos = combine(self.pos, pos)
-        self.rot = combine(self.rot, rot)
 
     def add_wall(self, wall):
         if wall not in ["top", "left", "right", "bottom"]:
@@ -296,7 +273,7 @@ class KeyFactory(object):
     WALL_KEYS = None
 
     @staticmethod
-    def t_key_by_id(key_id: str) -> Key:
+    def get_key_by_id(key_id: str) -> Key:
         if key_id not in KeyFactory.KEYS_BY_ID.keys():
             return KeyFactory.KEYS_BY_ID["none"]
         return KeyFactory.KEYS_BY_ID[key_id]

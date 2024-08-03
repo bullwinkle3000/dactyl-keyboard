@@ -11,4 +11,28 @@ class TrackballPart(Part):
         if parent_locals is not None:
             for item in parent_locals:
                 globals()[item] = parent_locals[item]
+        self.width = 40
+        self.height = 40
+
+    def tl(self):
+        x = np.sin(-np.pi / 4) * (-self.width / 2)
+        y = np.cos(-np.pi / 4) * (self.width / 2)
+        return self.offset_point([x, y, 0])
+
+    def bl(self):
+        x = np.sin(np.pi / 4) * (-self.width / 2)
+        y = np.cos(np.pi / 4) * (-self.width / 2)
+        return self.offset_point([x, y, 0])
+
+    def tr(self):
+        x = np.sin(-np.pi / 4) * (self.width / 2)
+        y = np.cos(-np.pi / 4) * (self.width / 2)
+        return self.offset_point([x, y, 0])
+
+    def br(self):
+        x = np.sin(np.pi / 4) * (self.width / 2)
+        y = np.cos(np.pi / 4) * (-self.width / 2)
+        return self.offset_point([x, y, 0])
+
+
 

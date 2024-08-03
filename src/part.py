@@ -1,15 +1,16 @@
 from common import combine
 
 from geom import *
+from geom import rotate_deg, add_translate
 
 
 class Part(object):
 
-    def __init__(self, part_id,):
+    def __init__(self, part_id):
         self._rot_transform = None
         self._rot = [0, 0, 0]
         self.neighbors = {}
-        self.pos = [0, 0, 0]
+        self._pos = [0, 0, 0]
         self._d_vec = [0, 0, 0]
         self._id = part_id
         self._rot_transform = None
@@ -36,7 +37,7 @@ class Part(object):
             raise ValueError('Invalid pos')
 
     def _get_pos(self):
-        return self._pos.copy()
+        return self._pos
 
     pos = property(fget=_get_pos, fset=_set_pos, doc='Get/Set position')
 
@@ -108,6 +109,41 @@ class Part(object):
     def get_bottom_neighbors(self):
         return self._get_neighbors(["bl", "b", "br"])
 
+    # def offset_by(self, off):
+    #     off = self.offset_point(off)
+    #     return combine(self._pos, off)
+
+    def center(self, off=(0, 0, 0)):
+        return self.offset_point(off)
+
+    def left(self, off=(0, 0, 0)):
+        return self.offset_point(combine([-self.width / 2, 0, 0], off))
+
+    def right(self, off=(0, 0, 0)):
+        return self.offset_point(combine([self.width / 2, 0, 0], off))
+
+    def top(self, off=(0, 0, 0)):
+        return self.offset_point(combine([0, self.height / 2, 0], off))
+
+    def bottom(self, off=(0, 0, 0)):
+        return self.offset_point(combine([0, -self.height / 2, 0], off))
+
+    def tl(self, off=(0, 0, 0)):
+        return self.offset_point(combine([-self.width / 2, self.height / 2, 0], off))
+
+    def bl(self, off=(0, 0, 0)):
+        return self.offset_point(combine([-self.width / 2, -self.height / 2, 0], off))
+
+    def tr(self, off=(0, 0, 0)):
+        return self.offset_point(combine([self.width / 2, self.height / 2, 0], off))
+
+    def br(self, off=(0, 0, 0)):
+        return self.offset_point(combine([self.width / 2, -self.height / 2, 0], off))
+
+    def update_pos_rot(self, pos, rot):
+        self.pos = combine(self.pos, pos)
+        self.rot = combine(self.rot, rot)
+
     # def top_edge(self):
     #     return [self.tl_wide(), self.tr_wide()]
     #
@@ -125,27 +161,54 @@ class Part(object):
     #         return self.inner_edge(side="right")
     #     return self.inner_edge(side="left")
 
-    def closest_corner(self, rel_pos):
-        dist = 99999999999.0
-        all_dist = [
-            distance(rel_pos, self.tl_wide()),
-            distance(rel_pos, self.tr_wide()),
-            distance(rel_pos, self.bl_wide()),
-            distance(rel_pos, self.br_wide())
-        ]
 
-        index = -1
 
-        for i in range(4):
-            if all_dist[i] < dist:
-                index = i
-                dist = all_dist[i]
 
-        if index == 0:
-            return self.tl_wide()
-        elif index == 1:
-            return self.tr_wide()
-        elif index == 2:
-            return self.bl_wide()
+    ###### RECONSIDER THE BELOW
+    #
+    # def closest_corner(self, rel_pos):
+    #     dist = 99999999999.0
+    #     all_dist = [
+    #         distance(rel_pos, self.tl_wide()),
+    #         distance(rel_pos, self.tr_wide()),
+    #         distance(rel_pos, self.bl_wide()),
+    #         distance(rel_pos, self.br_wide())
+    #     ]
+    #
+    #     index = -1
+    #
+    #     for i in range(4):
+    #         if all_dist[i] < dist:
+    #             index = i
+    #             dist = all_dist[i]
+    #
+    #     if index == 0:
+    #         return self.tl_wide()
+    #     elif index == 1:
+    #         return self.tr_wide()
+    #     elif index == 2:
+    #         return self.bl_wide()
+    #
+    #     return self.br_wide()
+    #
 
-        return self.br_wide()
+    #
+    # def tr_wide(self, off=(0, 0, 0)):
+    #     # return self._offset_point(mount_width / 2.0, mount_height / 2.0, off)
+    #     offset = rotate_deg([(mount_width / 2.0) + off[0], (mount_height / 2) + off[1], off[2]], self._rot)
+    #     return add_translate(self._pos, offset)
+    #
+    # def tl_wide(self, off=(0, 0, 0)):
+    #     # return self._offset_point(-mount_width / 2.0, mount_height / 2.0, off)
+    #     offset = rotate_deg([-(mount_width / 2.0) - off[0], (mount_height / 2) + off[1], off[2]], self._rot)
+    #     return add_translate(self._pos, offset)
+    #
+    # def br_wide(self, off=(0, 0, 0)):
+    #     # return self._offset_point(mount_width / 2.0, -mount_height / 2.0, off)
+    #     offset = rotate_deg([(mount_width / 2.0) + off[0], -(mount_height / 2) - off[1], off[2]], self._rot)
+    #     return add_translate(self._pos, offset)
+    #
+    # def bl_wide(self, off=(0, 0, 0)):
+    #     # (-mount_width / 2.0, -mount_height / 2.0, off)
+    #     offset = rotate_deg([-(mount_width / 2.0) - off[0], -(mount_height / 2) - off[1], off[2]], self._rot)
+    #     return add_translate(self._pos, offset)
