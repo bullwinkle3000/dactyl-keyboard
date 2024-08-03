@@ -10,6 +10,7 @@ SIZES = {
 
 KEY_NONE = None
 
+
 class Key(Part):
     type = "MX"
     hole = "NOTCH"
@@ -22,9 +23,7 @@ class Key(Part):
         self.w = SIZES[key_type]["w"]
         self.h = SIZES[key_type]["h"]
         self.d = SIZES[key_type]["d"]
-        self.neighbors = {}
         self.walls = []
-        self._rot_transform = None
         if parent_locals is not None:
             for item in parent_locals:
                 globals()[item] = parent_locals[item]
@@ -110,7 +109,7 @@ class Key(Part):
 
         self.walls.append(wall)
 
-    def get_corner(self):
+    def get_corners(self):
         corners = []
 
         if "left" in self.walls and "top" in self.walls:
@@ -127,89 +126,11 @@ class Key(Part):
 
         return corners
 
-    def add_neighbor(self, neighbor, side):
-        if side not in ["t", "r", "l", "b", "tr", "br", "tl", "bl"]:
-            raise Exception("side value out of range")
-        if neighbor.is_none():
-            raise Exception("neighbor cannot be NONE key")
-
-        self.neighbors[side] = neighbor
-
-    def get_neighbor(self, side):
-        if side not in ["t", "r", "l", "b", "tr", "br", "tl", "bl"]:
-            raise Exception("side value out of range")
-        if side in self.neighbors.keys():
-            return self.neighbors[side]
-        return KeyFactory.NONE_KEY
-
-    def _get_neighbors(self, ids):
-        found = []
-        for id in ids:
-            key = self.get_neighbor(id)
-            if key is not None and not key.is_none():
-                found.append(key)
-
-        return found
-
-    def get_left_neighbors(self):
-        return self._get_neighbors(["tl", "l", "bl"])
-
-    def get_right_neighbors(self):
-        return self._get_neighbors(["tr", "r", "br"])
-
-    def get_top_neighbors(self):
-        return self._get_neighbors(["tl", "t", "tr"])
-
-    def get_bottom_neighbors(self):
-        return self._get_neighbors(["bl", "b", "br"])
-
-    def top_edge(self):
-        return [self.tl_wide(), self.tr_wide()]
-
-    def bottom_edge(self):
-        return [self.bl_wide(), self.br_wide()]
-
-    def inner_edge(self, side="right"):
-        if side == "right":
-            return [self.tl_wide(), self.bl_wide()]
-
-        return [self.tr_wide(), self.br_wide()]
-
-    def outer_edge(self, side="right"):
-        if side == "left":
-            return self.inner_edge(side="right")
-        return self.inner_edge(side="left")
-
     def is_none(self):
         return self._id == "none"
 
     def is_present(self):
         return not self.is_none()
-
-    def closest_corner(self, rel_pos):
-        dist = 99999999999.0
-        all_dist = [
-            distance(rel_pos, self.tl_wide()),
-            distance(rel_pos, self.tr_wide()),
-            distance(rel_pos, self.bl_wide()),
-            distance(rel_pos, self.br_wide())
-        ]
-
-        index = -1
-
-        for i in range(4):
-            if all_dist[i] < dist:
-                index = i
-                dist = all_dist[i]
-
-        if index == 0:
-            return self.tl_wide()
-        elif index == 1:
-            return self.tr_wide()
-        elif index == 2:
-            return self.bl_wide()
-
-        return self.br_wide()
 
     def calculate_key_placement(self,
                                 column,
