@@ -14,22 +14,22 @@ class TrackballPart(Part):
         self.width = 40
         self.height = 40
 
-    def tl(self):
+    def tl(self, off=(0, 0, 0)):
         x = np.sin(-np.pi / 4) * (-self.width / 2)
         y = np.cos(-np.pi / 4) * (self.width / 2)
         return self.offset_point([x, y, 0])
 
-    def bl(self):
+    def bl(self, off=(0, 0, 0)):
         x = np.sin(np.pi / 4) * (-self.width / 2)
         y = np.cos(np.pi / 4) * (-self.width / 2)
         return self.offset_point([x, y, 0])
 
-    def tr(self):
+    def tr(self, off=(0, 0, 0)):
         x = np.sin(-np.pi / 4) * (self.width / 2)
         y = np.cos(-np.pi / 4) * (self.width / 2)
         return self.offset_point([x, y, 0])
 
-    def br(self):
+    def br(self, off=(0, 0, 0)):
         x = np.sin(np.pi / 4) * (self.width / 2)
         y = np.cos(np.pi / 4) * (-self.width / 2)
         return self.offset_point([x, y, 0])

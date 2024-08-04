@@ -405,13 +405,18 @@ class KeyFactory(object):
         KeyFactory.WALL_KEYS = None
 
     @classmethod
+    def add_part(cls, part):
+        if part.get_id() in cls.KEYS_BY_ID:
+            print("WARNING: id already in keys list",  part.get_id())
+        else:
+            cls.KEYS_BY_ID[ part.get_id()] = part
+
+        return part
+
+    @classmethod
     def new_key(cls, key_id: str, parent_locals, key_type="MX", hole_type="NOTCH"):
         key = Key(key_id, parent_locals, key_type=key_type, hole_type=hole_type)
-        if key_id in cls.KEYS_BY_ID:
-            print("WARNING: key_id already in keys list", key_id)
-        else:
-            cls.KEYS_BY_ID[key_id] = key
-        return key
+        return cls.add_part(key)
 
     @classmethod
     def new_key_by_row_column(cls, row: int, col: int, parent_locals, key_type="MX", hole_type="NOTCH"):
