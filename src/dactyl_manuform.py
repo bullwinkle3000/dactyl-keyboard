@@ -63,7 +63,7 @@ def rad2deg(rad: float) -> float:
     return rad * 180 / pi
 
 
-debug_exports = False
+debug_exports = True
 debug_trace = False
 
 
@@ -2385,9 +2385,9 @@ def make_dactyl():
             export_file(shape=thumb_shape, fname=path.join(r".", "things", r"debug_thumb_shape"))
         shape = union([shape, thumb_shape])
         thumb_connector_shape = cluster(side).thumb_connectors(side=side)
-        shape = union([shape, thumb_connector_shape])
         if debug_exports:
-            export_file(shape=shape, fname=path.join(r".", "things", r"debug_thumb_connector_shape"))
+            export_file(shape=thumb_connector_shape, fname=path.join(r".", "things", r"debug_thumb_connector_shape"))
+        shape = union([shape, thumb_connector_shape])
         walls_shape = case_walls(side=side)
         if debug_exports:
             export_file(shape=walls_shape, fname=path.join(r".", "things", r"debug_walls_shape"))

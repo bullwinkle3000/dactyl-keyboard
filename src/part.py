@@ -116,6 +116,20 @@ class Part(object):
     def center(self, off=(0, 0, 0)):
         return self.offset_point(off)
 
+    def get_point_at(self, side, off=(0, 0, 0)):
+        match side:
+            case "t": return self.top(off=off)
+            case "b": return self.bottom(off=off)
+            case "r": return self.right(off=off)
+            case "l": return self.left(off=off)
+            case "tl": return self.tl(off=off)
+            case "bl": return self.bl(off=off)
+            case "tr": return self.tr(off=off)
+            case "br": return self.br(off=off)
+
+        raise ValueError("No such side: ", side)
+
+
     def left(self, off=(0, 0, 0)):
         return self.offset_point(combine([-self.width / 2, 0, 0], off))
 

@@ -29,8 +29,8 @@ class KeypadCluster(TrackballOrbyl):
         return shape
 
     def build_key_matrix(self):
-        trackball = TrackballPart(self.locals)
-        KF.add_part(trackball)
+        # trackball = TrackballPart(self.locals)
+        # KF.add_part(trackball)
         key = None
         prev_key = None
         origin = [0, 0, 0]
@@ -39,11 +39,11 @@ class KeypadCluster(TrackballOrbyl):
         off_x = 5
         top_y = -10
 
-        trackball.pos = self.thumborigin()
+        # trackball.pos = self.thumborigin()
 
         c_pos, c_rot = self.position_rotation()
 
-        trackball.update_pos_rot(c_pos, c_rot)
+        # trackball.update_pos_rot(c_pos, c_rot)
 
         z_inc = 5
 
@@ -58,6 +58,7 @@ class KeypadCluster(TrackballOrbyl):
 
                 if not key.is_none():
                     key.pos = [horiz_off * c, -vert_off * r, 0]
+                    key.update_pos_rot(c_pos, c_rot)
 
         key_0_2 = KF.get_key_by_row_col(0, 2)
         key_0_3 = KF.get_key_by_row_col(0, 3)
@@ -68,7 +69,8 @@ class KeypadCluster(TrackballOrbyl):
         key_2_2 = KF.get_key_by_row_col(2, 2)
         key_2_3 = KF.get_key_by_row_col(2, 3)
 
-        key_0_2.add_neighbor(trackball, "bl")
+        # trackball.add_neighbor(key_0_2, "tr")
+        # key_0_2.add_neighbor(trackball, "bl")
         key_0_2.add_neighbor(key_0_3, "r")
         key_0_2.add_neighbor(key_1_2, "b")
         key_0_2.add_neighbor(key_1_3, "br")
@@ -78,7 +80,8 @@ class KeypadCluster(TrackballOrbyl):
         key_0_3.add_neighbor(key_1_3, "b")
         key_0_3.add_neighbor("wall", "r")
 
-        key_1_2.add_neighbor(trackball, "l")
+        # trackball.add_neighbor(key_1_2, "r")
+        # key_1_2.add_neighbor(trackball, "l")
         key_1_2.add_neighbor(key_0_2, "t")
         key_1_2.add_neighbor(key_0_3, "tr")
         key_1_2.add_neighbor(key_1_3, "r")
@@ -93,19 +96,22 @@ class KeypadCluster(TrackballOrbyl):
         key_1_3.add_neighbor(key_2_3, "b")
         key_1_3.add_neighbor(key_2_2, "bl")
 
-        key_0_2.add_neighbor(trackball, "tl")
+        # trackball.add_neighbor(key_0_2, "br")
+        # key_0_2.add_neighbor(trackball, "tl")
         key_2_0.add_neighbor("wall", "l")
         key_2_0.add_neighbor("outer_corner", "bl")
         key_2_0.add_neighbor("wall", "b")
         key_2_0.add_neighbor(key_2_1, "r")
 
-        key_2_1.add_neighbor(trackball, "t")
+        # trackball.add_neighbor(key_2_1, "b")
+        # key_2_1.add_neighbor(trackball, "t")
         key_2_1.add_neighbor(key_2_0, "l")
         key_2_1.add_neighbor("wall", "b")
         key_2_1.add_neighbor(key_2_2, "l")
         key_2_1.add_neighbor(key_1_2, "tl")
 
-        key_2_2.add_neighbor(trackball, "tl")
+        # trackball.add_neighbor(key_2_2, "br")
+        # key_2_2.add_neighbor(trackball, "tl")
         key_2_2.add_neighbor(key_1_2, "t")
         key_2_2.add_neighbor(key_1_3, "tr")
         key_2_2.add_neighbor(key_2_3, "r")
@@ -118,7 +124,6 @@ class KeypadCluster(TrackballOrbyl):
         key_2_3.add_neighbor("outer_corner", "br")
         key_2_3.add_neighbor("wall", "b")
         key_2_3.add_neighbor(key_2_2, "r")
-
 
 
     def build_keys(self):
@@ -191,53 +196,100 @@ class KeypadCluster(TrackballOrbyl):
                 if not key.is_none():
                     shapes.append(key.render(None, cap))
 
-        return shapes
+        return union(shapes)
 
     def thumb_15x_layout(self, shape, cap=False, plate=True):
         return []
 
     def build_corner(self, part, facing, corner_type):
-        pass
+        return []
 
-    def build_wall(self, part, facing, corner_type):
-        pass
+    def build_wall(self, part, facing):
+        return []
 
-    def get_points(self, part):
-        hulls = []
-        for k, v in part.neighbors:
-            if v in ["outer_corner", "inner_corner"]:
-                self.build_corner(part, k, v)
-            elif v == "wall":
-                self.build_wall(part, k, v)
-            elif k == "t":
+    def get_join(self, part, neighb):
+        for k in neighb.neighbors:
+            v = neighb.neighbors[k]
+            if v is part:
+                return k
+
+        return None
+
+    def get_points(self, part1, side1, part2, side2):
+        side_points = {
+            "t": ["tl", "t", "tr"],
+            "b": ["bl", "b", "br"],
+            "l": ["tl", "l", "bl"],
+            "r": ["tr", "r", "br"],
+            "tl": ["t", "tl", "l"],
+            "bl": ["b", "bl", "l"],
+            "tr": ["t", "tr", "r"],
+            "br": ["b", "br", "r"]
+        }
+
+        sp1 = side_points[side1]
+        sp2 = side_points[side2]
+
+        return [
+            hull_from_points([
+                part1.get_point_at(sp1[0]),
+                part2.get_point_at(sp2[1]),
+                part1.get_point_at(sp1[2])
+            ]),
+            hull_from_points([
+                part2.get_point_at(sp2[0]),
+                part1.get_point_at(sp1[1]),
+                part2.get_point_at(sp2[2])
+            ])
+
+        ]
+
+    def get_connection(self, part, side, neighb):
+        neighb_side = self.get_join(part, neighb)
+        points = self.get_points(part, side, neighb, neighb_side)
+
+        return hull_from_points(points)
 
     def thumb_connectors(self, side="right"):
+        processed = {}
         hulls = []
         for r in range(4):
             for c in range(4):
                 key = KF.get_key_by_row_col(r, c)
+                if key.get_id() not in processed.keys():
+                    processed[key.get_id()] = []
                 if not key.is_none():
-                    pass
-        # key0 = KF.KEYS_BY_ID["0"]
-        # key1 = KF.KEYS_BY_ID["1"]
-        # key2 = KF.KEYS_BY_ID["2"]
-        # key3 = KF.KEYS_BY_ID["3"]
-        # key4 = KF.KEYS_BY_ID["4"]
-        # key5 = KF.KEYS_BY_ID["5"]
-        # key6 = KF.KEYS_BY_ID["6"]
-        # key7 = KF.KEYS_BY_ID["7"]
+                    for side in key.neighbors:
+                        neighb = key.neighbors[side]
+                        if side in processed[key.get_id()]:
+                            continue
+                        if neighb in ["inner_corner", "outer_corner"]:
+                            pass
+                            # hulls.append(union(self.build_corner(key, side, neighb)))
+                        elif neighb == "wall":
+                            pass
+                            # hulls.append(union(self.build_wall(key, side)))
+                        else:
+                            if neighb.get_id() not in processed.keys():
+                                processed[neighb.get_id()] = []
+                            neighb_side = self.get_join(key, neighb)
+                            points = self.get_points(key, side, neighb, neighb_side)
+                            # hull = hull_from_points(points)
+                            hulls = hulls + points
+                            processed[neighb.get_id()].append(neighb_side)
+                            processed[key.get_id()].append(side)
 
 
-
-
-
-        return hulls
+                            return union(hulls)
 
     def walls(self, side="right"):
         return []
 
     def connection(self, side="right"):
         return []
+
+    # def thumb(self, side="right"):
+    #     return []
 
 
 
