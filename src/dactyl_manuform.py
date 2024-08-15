@@ -2690,7 +2690,7 @@ def make_dactyl():
         left_name = get_descriptor_name_side(side="left")
         mod_r, walls_r = model_side(side="right")
         base = baseplate(walls_r, side='right')
-        rest_r = wrist_rest(mod_r, base, side="right")
+        # rest_r = wrist_rest(mod_r, base, side="right")
 
         if resin and ENGINE == "cadquery":
             mod_r = rotate(mod_r, (333.04, 43.67, 85.00))
@@ -2704,7 +2704,7 @@ def make_dactyl():
 
         # base = union([base, rest])
         export_file(shape=base, fname=path.join(save_path, right_name + r"_PLATE"))
-        export_file(shape=rest_r, fname=path.join(save_path, right_name + r"_WRIST_REST"))
+        # export_file(shape=rest_r, fname=path.join(save_path, right_name + r"_WRIST_REST"))
         if quickly:
             print(">>>>>  QUICK RENDER: Only rendering a the right side and bottom plate.")
             return
@@ -2724,14 +2724,14 @@ def make_dactyl():
         export_file(shape=mod_l, fname=path.join(save_path, left_name + r"_TOP"))
 
         base_l = baseplate(walls_l, side='left')
-        rest_l = mirror(wrist_rest(mod_l, base_l, side="left"), 'YZ')
+        # rest_l = mirror(wrist_rest(mod_l, base_l, side="left"), 'YZ')
         base_l = mirror(base_l, "YZ")
 
 
 
         export_file(shape=base_l, fname=path.join(save_path, left_name + r"_PLATE"))
         # export_dxf(shape=base_l, fname=path.join(save_path, left_name + r"_PLATE"))
-        export_file(shape=rest_l, fname=path.join(save_path, left_name + r"_WRIST_REST"))
+        # export_file(shape=rest_l, fname=path.join(save_path, left_name + r"_WRIST_REST"))
         # else:
         #     export_file(shape=mirror(mod_r, 'YZ'), fname=path.join(save_path, config_name + r"_left"))
         #
