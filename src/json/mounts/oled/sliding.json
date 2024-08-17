@@ -34,5 +34,6 @@
   "oled_edge_overlap_connector": 5.5,
   "oled_edge_overlap_thickness": 2.5,
   "oled_edge_overlap_clearance": 2.5,
-  "oled_edge_chamfer": 2.0
+  "oled_edge_chamfer": 2.0,
+  "oled_type": "OLED"
 }
