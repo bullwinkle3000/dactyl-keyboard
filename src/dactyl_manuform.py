@@ -1893,8 +1893,10 @@ def make_dactyl():
 
         # tb_file = path.join(parts_path, r"trackball_socket_body_34mm")
         # tbcut_file = path.join(parts_path, r"trackball_socket_cutter_34mm")
-
-        if btus:
+        if joystick:
+            tb_file = path.join(parts_path, r"joystick_mount")
+            tbcut_file = path.join(parts_path, r"phatter_btu_socket_cutter")
+        elif btus:
             tb_file = path.join(parts_path, r"phat_btu_socket")
             tbcut_file = path.join(parts_path, r"phatter_btu_socket_cutter")
         elif ceramic:
@@ -1919,6 +1921,11 @@ def make_dactyl():
         shape = import_file(tb_file)
         sensor = import_file(sens_file)
         cutter = import_file(tbcut_file)
+
+        if joystick:
+            shape = rotate(shape, (0, 0, 35))
+            shape = translate(shape, (0, 0, 1.2))
+
         if not btus and not ceramic:
             cutter = union([cutter, translate(import_file(senscut_file), (0, 0, -40))])
 

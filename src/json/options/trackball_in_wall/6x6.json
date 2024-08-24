@@ -1,0 +1,113 @@
+{
+  "tb_socket_translation_offset": [
+    0,
+    0,
+    0
+  ],
+  "tb_socket_rotation_offset": [
+    0,
+    0,
+    10
+  ],
+  "tbiw_translational_offset": [
+    -6,
+    -29,
+    -6
+  ],
+  "tbiw_rotation_offset": [
+    40,
+    15,
+    -25
+  ],
+  "tbiw_left_wall_x_offset_override": 36.0,
+  "tbiw_left_wall_z_offset_override": 6.0,
+  "tbiw_left_wall_lower_y_offset": -12.0,
+  "tbiw_left_wall_lower_z_offset": 14.0,
+  "oled_left_wall_x_offset_override": 36.0,
+  "oled_left_wall_z_offset_override": 6.0,
+  "oled_left_wall_lower_y_offset": -12.0,
+  "oled_left_wall_lower_z_offset": 14.0,
+  "left_wall_z_offset_override": 6.0,
+  "left_wall_lower_y_offset": -12.0,
+  "left_wall_lower_z_offset": 14.0,
+  "oled_translation_offset": [
+    -2,
+    -2,
+    -4
+  ],
+  "oled_rotation_offset": [
+    -1,
+    0,
+    0
+  ],
+  "encoder_wall_row": 2,
+  "right_encoder_wall_offset": [
+    -85, -8, 39
+  ],
+  "right_encoder_wall_rotation": [
+    -3, -5, 1
+  ],
+  "left_encoder_wall_offset": [
+    -82, -12, 42
+  ],
+  "left_encoder_wall_rotation": [
+    -3, -5, 1
+  ],
+  "left_left_wall_x_join_offset": -0.33,
+  "left_left_wall_y_join_offset": -5,
+  "left_left_wall_z_join_offset": -0.6,
+  "right_left_wall_x_join_offset": 0.35,
+  "right_left_wall_y_join_offset": -6,
+  "right_left_wall_z_join_offset": 0.6,
+  "oled_center_row": 1.25,
+  "tbiw_oled_center_row": 1.25,
+  "trackball_in_wall": true,
+  "tbiw_ball_center_row": 0.2,
+  "tbiw_oled_translation_offset": [
+    0,
+    3,
+    1
+  ],
+  "tbiw_oled_rotation_offset": [
+    0,
+    -2,
+    5
+  ],
+  "screw_offsets": [
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      -2,
+      8,
+      0
+    ],
+    [
+     3,
+      -2,
+      0
+    ],
+    [
+      -17,
+      3,
+      0
+    ],
+    [
+      1,
+      6,
+      0
+    ],
+    [
+      2,
+      -7,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ]
+  ]
+}
