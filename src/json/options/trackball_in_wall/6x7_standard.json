@@ -7,12 +7,12 @@
   "tb_socket_rotation_offset": [
     0,
     0,
-    10
+    80
   ],
   "tbiw_translational_offset": [
     -7,
     -27,
-    -8
+    -5
   ],
   "tbiw_rotation_offset": [
     35,
@@ -47,7 +47,7 @@
   "tbiw_oled_translation_offset": [
     -1,
     -2,
-    -2
+    -4
   ],
   "tbiw_oled_rotation_offset": [
     -2,
@@ -61,10 +61,10 @@
     -3, -5, -2
   ],
   "left_encoder_wall_offset": [
-    -82, -12, 40
+    -80, -12, 39.2
   ],
   "left_encoder_wall_rotation": [
-    -7, -5, 1
+    -7, -5, 3
   ],
   "tbiw_encoder_wall_offset": [
     -85, -3, 41
