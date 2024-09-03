@@ -380,6 +380,9 @@ def make_dactyl():
     elif plate_style in ['UNDERCUT', 'HS_UNDERCUT', 'NOTCH', 'HS_NOTCH', 'CHOC']:
         keyswitch_height = undercut_keyswitch_height
         keyswitch_width = undercut_keyswitch_width
+    elif plate_tyle == "CHOC":
+        keyswitch_height = choc_keyswitch_height
+        keyswitch_width = choc_keyswitch_width
     else:
         keyswitch_height = hole_keyswitch_height
         keyswitch_width = hole_keyswitch_width

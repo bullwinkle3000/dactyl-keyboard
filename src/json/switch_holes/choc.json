@@ -3,8 +3,11 @@
   "plate_thickness": 2.7,
   "clip_thickness": 0.9,
   "clip_undercut": 0.5,
-  "web_thickness": 3.0,
+  "web_thickness": 3.01,
   "extra_width":  1.25,
-  "extra_height":  0.5,
-  "top_plate_offset": 0.5
+  "extra_height": -0.7,
+  "top_plate_offset": 0.5,
+  "choc_keyswitch_height": 13.9,
+  "choc_keyswitch_width": 13.9,
+  "undercut_transition": 0
 }
