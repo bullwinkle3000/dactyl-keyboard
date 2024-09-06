@@ -2485,6 +2485,9 @@ def make_dactyl():
                 if cluster(side).has_btus():
                     shape = difference(shape, [tbcutout])
                     shape = union([shape, tb])
+                elif ceramic:
+                    shape = difference(shape, [tbcutout])
+                    shape = union([shape, tb])
                 else:
                     # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_1"))
                     shape = union([shape, tb])
