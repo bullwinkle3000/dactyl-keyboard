@@ -2,7 +2,7 @@
   "tb_socket_translation_offset": [
     0,
     0,
-    0
+    3.5
   ],
   "tb_socket_rotation_offset": [
     0,
@@ -15,9 +15,9 @@
     -8
   ],
   "tbiw_rotation_offset": [
-    35,
+    40,
     0,
-    -10
+    -20
   ],
   "tbiw_left_wall_x_offset_override": 31.0,
   "tbiw_left_wall_z_offset_override": 6.0,
@@ -39,7 +39,7 @@
   "oled_translation_offset": [
     0,
     3,
-    2
+    6
   ],
   "oled_rotation_offset": [
     2,
@@ -58,24 +58,24 @@
     -3, -5, -2
   ],
   "left_encoder_wall_offset": [
-    -83, -15, 42
+    -83, -15, 43
   ],
   "left_encoder_wall_rotation": [
     -9, -5, 1
   ],
   "tbiw_encoder_wall_offset": [
-    -85, -4, 41
+    -85, 0, 42
   ],
   "tbiw_encoder_wall_rotation": [
-    -6, -4, -1
+    0, -4, -1
   ],
   "tbiw_oled_translation_offset": [
     3,
-    2,
-    2
+    6,
+    7.8
   ],
   "tbiw_oled_rotation_offset": [
-    2,
+    4,
     -3,
     2
   ],

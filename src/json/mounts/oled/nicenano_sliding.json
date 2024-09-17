@@ -1,9 +1,9 @@
 {
   "oled_mount_type": "UNDERCUT",
-  "oled_mount_width": 13.25,
+  "oled_mount_width": 14.15,
   "oled_mount_height": 27.0,
   "oled_mount_rim": 3,
-  "oled_mount_depth": 5.0,
+  "oled_mount_depth": 3.2,
   "oled_mount_cut_depth": 20.0,
   "oled_mount_location_xyz": [
     -78.0,
@@ -19,7 +19,7 @@
   "oled_left_wall_z_offset_override": 0.0,
   "oled_left_wall_lower_y_offset": 12.0,
   "oled_left_wall_lower_z_offset": 5.0,
-  "oled_thickness": 4.2,
+  "oled_thickness": 5,
   "oled_edge_overlap_end": 6.5,
   "oled_edge_overlap_connector": 5.5,
   "oled_edge_overlap_thickness": 2.5,

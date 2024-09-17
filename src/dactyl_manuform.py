@@ -2313,18 +2313,18 @@ def make_dactyl():
     def oled_undercut_mount_frame(side='right'):
         mount_ext_width = oled_mount_width + 2 * oled_mount_rim
         mount_ext_height = oled_mount_height + 2 * oled_mount_undercut_height_rim
-        hole = box(mount_ext_width, mount_ext_height, oled_mount_cut_depth + .01)
+        hole = box(mount_ext_width, mount_ext_height - 6, oled_mount_cut_depth + .01)
 
         shape = box(mount_ext_width, mount_ext_height, oled_mount_depth)
         shape = difference(shape, [box(oled_mount_width, oled_mount_height, oled_mount_depth + .1)])
         undercut = box(
-            oled_mount_width + 2 * oled_mount_undercut,
+            oled_mount_width + 2 * oled_mount_undercut + 2,
             oled_mount_height + 2 * oled_mount_undercut_height,
             oled_mount_depth)
         undercut = translate(undercut, (0., 0., -oled_mount_undercut_thickness))
         shape = difference(shape, [undercut])
-        if is_cq():
-            shape = shape.edges(">Z").chamfer(0.7)
+        # if is_cq():
+        #     shape = shape.edges(">Z").chamfer(0.7)
 
         oled_mount_location_xyz, oled_mount_rotation_xyz = oled_position_rotation(side=side)
 
