@@ -30,7 +30,7 @@
   "oled_left_wall_lower_y_offset": 12.0,
   "oled_left_wall_lower_z_offset": 5.0,
   "oled_thickness": 4.2,
-  "oled_edge_overlap_end": 6.5,
+  "oled_edge_overlap_end": 4.5,
   "oled_edge_overlap_connector": 5.5,
   "oled_edge_overlap_thickness": 2.5,
   "oled_edge_overlap_clearance": 2.5,
