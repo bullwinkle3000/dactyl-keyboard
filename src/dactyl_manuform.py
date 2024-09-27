@@ -1214,24 +1214,21 @@ def make_dactyl():
                 y_offset = left_wall_lower_y_offset
                 z_offset = left_wall_lower_z_offset
                 # RIDICULOUS HACK 1
-        # elif row == abs(shift_at) and row != 0:
-        #         # if wall_x_offsets[row] > wall_x_offsets[row - 1]:
-        #     y_offset = join_offset_y
-        #     z_offset += join_offset_z
-        #
-        #     return list(pos - np.array([
-        #         wall_x_offsets[row] + join_offset_x,
-        #         -y_offset,
-        #         left_wall_z_offset + z_offset
-        #     ]))
-        # elif row < nrows - 1 and wall_x_offsets[row] != wall_x_offsets[row + 1]:
-        #     y_offset = +
-        #     return list(pos - np.array([
-        #         wall_x_offsets[row],
-        #         -y_offset,
-        #         left_wall_z_offset + z_offset
-        #     ]))
+        if row > 0:
+            old_x = wall_x_offsets[row - 1]
 
+            if old_x > wall_x_offsets[row]:
+                y_offset -= 3
+            elif old_x < wall_x_offsets[row]:
+                y_offset -= 3
+
+        if row < nrows - 2:
+            next_x = wall_x_offsets[row + 1]
+
+            if next_x > wall_x_offsets[row]:
+                y_offset += 3
+            elif next_x < wall_x_offsets[row]:
+                y_offset += 3
 
         return list(pos - np.array([wall_x_offsets[row], -y_offset, left_wall_z_offset + z_offset]))
 
