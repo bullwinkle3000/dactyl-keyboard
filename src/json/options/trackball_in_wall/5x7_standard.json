@@ -1,35 +1,25 @@
 {
   "tb_socket_translation_offset": [
-    0,
-    0,
+    -5,
+    15,
     0
   ],
   "tb_socket_rotation_offset": [
     0,
     0,
-    40
+    0
   ],
-  "tbiw_translational_offset": [
-    -7,
-    -27,
-    -8
-  ],
-  "tbiw_rotation_offset": [
-    35,
-    -2,
-    -10
-  ],
-  "tbiw_left_wall_x_offset_override": 31.0,
+  "tbiw_left_wall_x_offset_override": 36.0,
   "tbiw_left_wall_z_offset_override": 6.0,
-  "tbiw_left_wall_lower_y_offset": -12.0,
-  "tbiw_left_wall_lower_z_offset": 14.0,
-  "oled_left_wall_x_offset_override": 31.0,
+  "tbiw_left_wall_lower_y_offset": 0.0,
+  "tbiw_left_wall_lower_z_offset": 0.0,
+  "oled_left_wall_x_offset_override": 36.0,
   "oled_left_wall_z_offset_override": 6.0,
   "oled_left_wall_lower_y_offset": -12.0,
-  "oled_left_wall_lower_z_offset": 14.0,
-  "left_wall_z_offset_override": 6.0,
-  "left_wall_lower_y_offset": -12.0,
-  "left_wall_lower_z_offset": 14.0,
+  "oled_left_wall_lower_z_offset": 0.0,
+  "left_wall_z_offset_override": 0.0,
+  "left_wall_lower_y_offset": 0.0,
+  "left_wall_lower_z_offset": 0.0,
   "oled_translation_offset": [
     -2,
     4,
@@ -42,7 +32,7 @@
   ],
   "oled_center_row": 1.25,
   "tbiw_oled_center_row": 1.25,
-  "trackball_in_wall": false,
+  "trackball_in_wall": true,
   "tbiw_ball_center_row": 0.2,
   "right_encoder_wall_offset": [
     -85, -10, 42
@@ -57,10 +47,10 @@
     -5, -4, 0
   ],
   "tbiw_encoder_wall_offset": [
-    -85, -15, 41
+    -80, 42, 44
   ],
   "tbiw_encoder_wall_rotation": [
-    -6, -4, -1
+    20, -12, -10
   ],
   "tbiw_oled_translation_offset": [
     -1,
@@ -85,7 +75,7 @@
     ],
     [
       0,
-      -14,
+      0,
       0
     ],
     [

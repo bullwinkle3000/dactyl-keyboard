@@ -183,11 +183,11 @@ def make_dactyl():
                 offsets = [wide, wide, wide, wide, wide, wide, wide]
             elif nrows == 5:
                 shift_at = 2 if all_last_rows else 1
-                offsets = [all_last_row_wide, wide, wide, wide, wide, wide, wide]
+                offsets = [wide, wide, wide, wide, wide, wide, wide]
             elif nrows == 6:
                 shift_at = 3 if all_last_rows else 2
                 offsets = [
-                    short, all_last_row_wide, wide, wide, wide, wide, wide, wide
+                    wide, wide, wide, wide, wide, wide, wide, wide
                 ]
         elif oled_yes:
                 left_wall_x_offset = oled_left_wall_x_offset_override
