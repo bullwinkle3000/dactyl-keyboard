@@ -38,11 +38,11 @@
   "right_left_wall_z_join_offset": 0.6,
   "oled_translation_offset": [
     0,
-    0,
-    1
+    2,
+    5
   ],
   "oled_rotation_offset": [
-    0,
+    2,
     -3,
     2
   ],
@@ -61,18 +61,18 @@
     -83, -18, 43
   ],
   "left_encoder_wall_rotation": [
-    -9, -5, 1
+    -12, -4, 1
   ],
   "tbiw_encoder_wall_offset": [
-    -85, -4, 42
+    -85, -2, 42
   ],
   "tbiw_encoder_wall_rotation": [
     0, -4, -1
   ],
   "tbiw_oled_translation_offset": [
     3,
-    3,
-    0.5
+    5,
+    7
   ],
   "tbiw_oled_rotation_offset": [
     4,
