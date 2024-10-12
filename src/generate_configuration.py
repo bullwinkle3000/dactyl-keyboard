@@ -44,6 +44,7 @@ shape_config = {
 
     'show_caps': True,
     'show_pcbs': False, #only runs if caps are shown, easist place to initially inject geometry
+    'resin': False,
 
     'nrows':  5, #5,  # key rows
     'ncols':  6, #6,  # key columns
