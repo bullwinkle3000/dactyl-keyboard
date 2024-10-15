@@ -322,7 +322,7 @@ def make_dactyl():
 
     if data is None:
         print(f">>> Using config run_config.json on Git branch {local_branch}")
-        data = load_json(os.path.join("src", "run_config.json"), None, save_path)
+        data = load_json(os.path.join("src", "run_config.json"), save_path)
         # with open(os.path.join("src", "run_config.json"), mode='r') as fid:
         #     data = json.load(fid)
 
@@ -344,7 +344,7 @@ def make_dactyl():
             override_file = path.join(save_path, overrides_name + '.json')
 
         with open(override_file, mode='r') as fid:
-            override_data = load_json(override_file, {}, save_path)
+            override_data = load_json(override_file, save_path)
             for (key,value) in override_data.items():
                 data[key] = value
 
