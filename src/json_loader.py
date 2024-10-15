@@ -2,28 +2,30 @@ import json
 import os
 
 
-def load_json(filepath, merge_into=None, save_path='../things'):
-    if merge_into is None:
-        merge_into = {}
+def load_json(filepath, save_path='../things'):
+    with open('./src/run_config.json') as fid:
+        main_json = json.load(fid)
+
     with open(filepath, mode='r') as fid:
-        new_data = json.load(fid)
-    # for key in new_data:
-    #     merge_into[key] = new_data[key]
-    for key in new_data:
-        value = str(new_data[key])
+        first_data = json.load(fid)
+
+    for key in first_data:
+        value = str(first_data[key])
         if value.startswith("file:"):
             new_file_path = os.path.join(".", "src", "json", value[5:])
             print("Loading child json file: ", new_file_path)
-            merge_into = load_json(new_file_path, merge_into, save_path)
-        merge_into[key] = new_data[key]
-        # elif value.startswith("override:"):
-        #     name = value[9:]
-        #     new_file_path = os.path.join(save_path, name, name + ".json")
-        # if new_file_path is not None:
-        #     print("Loading child json file: ", new_file_path)
-        #     merge_into = load_json(new_file_path, merge_into, save_path)
 
-    return merge_into
+            with open(new_file_path, mode='r') as nfid:
+                to_merge = json.load(nfid)
+                for new_key in to_merge:
+                    main_json[new_key] = to_merge[new_key]
+
+    print("Overriding values from main override file into new merged file")
+
+    for key in first_data:
+        main_json[key] = first_data[key]
+
+    return main_json
 
 
 

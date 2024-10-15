@@ -10,6 +10,7 @@
   "show_pcbs": false,
   "color": "yellow",
   "resin": false,
+  "tilt_resin": true,
   "nrows": 6,
   "ncols": 6,
   "alpha": 0.26179916666666664,
@@ -74,6 +75,12 @@
       -85, -3, 42
     ],
     "left_encoder_wall_rotation": [
+      0, -5, 0
+    ],
+  "left_encoder_top_wall_offset": [
+      -85, -3, 42
+    ],
+    "left_encoder_top_wall_rotation": [
       0, -5, 0
     ],
   "tbiw_encoder_wall_offset": [
