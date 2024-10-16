@@ -51,7 +51,7 @@ conda activate $envName
 
 inform "Installing CadQuery..."
 
-conda install -c conda-forge -c cadquery cadquery=master -y
+conda install -c conda-forge cadquery occt=7.7.0 -y
 
 inform "Installing dataclasses-json..."
 
