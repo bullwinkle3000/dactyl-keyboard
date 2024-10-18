@@ -2632,7 +2632,7 @@ def make_dactyl():
             if controller_mount_type in ['BLACKPILL_EXTERNAL']:
                 s2 = difference(s2, [blackpill_mount_hole()])
 
-            if controller_mount_type in ['EXTERNAL', 'EXTERNAL_BREAKOUT']:
+            if controller_mount_type in ['EXTERNAL', 'EXTERNAL_BREAKOUT', 'ASSIMILATOR']:
                 s2 = difference(s2, [external_mount_hole()])
 
             if controller_mount_type in ['None']:
@@ -2910,7 +2910,29 @@ def make_dactyl():
                                        ))
                     shape = difference(shape, [controller_shape])
                     shape = union([shape, holder])
+                elif controller_mount_type == "ASSIMILATOR":
+                    basic_holder = rotate(import_file(path.join(parts_path, "assimilator_base")), (0, 0, 180))
+                    # basic_holder = translate(basic_holder)
+                    # controller_shape = translate(box(36.5, 57.5, 5),
+                    #                              (
+                    #                                  external_start[0] + external_holder_xoffset,
+                    #                                  external_start[1] + external_holder_yoffset - 24,
+                    #                                  external_holder_height / 2 - 7
+                    #                              ))
+                    # basic_holder = build_assimilator_holder()
+                    if side == "left":
+                        basic_holder = mirror(basic_holder, "YZ")
+                        basic_holder = translate(basic_holder, (-26.1, 0, 0))
 
+                    holder = translate(basic_holder,
+                                       (
+                                           external_start[0] + external_holder_xoffset + 13,
+                                           external_start[1] + external_holder_yoffset + 7.5,
+                                           external_holder_height / 2 - 10.5
+                                       ))
+                    # shape = difference(shape, [controller_shape])
+                    shape = union([shape, holder])
+                # export_file(shape=rest, fname=path.join(save_path, config_name + r"_right_wrist_rest"))
                 if magnet_bottom:
                     shape = difference(shape, [translate(magnet, (0, 0, 0.05 - (screw_insert_height / 2))) for magnet in list(tool)])
 
