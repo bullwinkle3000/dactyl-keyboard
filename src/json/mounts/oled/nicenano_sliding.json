@@ -1,7 +1,7 @@
 {
   "oled_mount_type": "UNDERCUT",
-  "oled_mount_width": 14.15,
-  "oled_mount_height": 27.0,
+  "oled_mount_width": 12.15,
+  "oled_mount_height": 27.5,
   "oled_mount_rim": 3,
   "oled_mount_depth": 3.2,
   "oled_mount_cut_depth": 20.0,

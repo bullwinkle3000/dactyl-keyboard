@@ -64,13 +64,13 @@
     -12, -4, 1
   ],
   "tbiw_encoder_wall_offset": [
-    -85, -2, 42
+    -84, -2, 42
   ],
   "tbiw_encoder_wall_rotation": [
     0, -4, -1
   ],
   "tbiw_oled_translation_offset": [
-    3,
+    0,
     5,
     7
   ],
