@@ -169,8 +169,8 @@ class Minithicc3(MinidoxCluster):
         pos = left_key_position(torow - 1, -1, low_corner=True)
 
         # TOTAL HACK!
-        # pos[0] = pos[0] - 28
-        # pos[1] = pos[1] - 12
+        pos[0] = pos[0] - 28
+        pos[1] = pos[1] - 12
         # pos = left_key_position(torow - 1, -2, low_corner=True)
         if shape is not None:
             return translate(shape, pos)
