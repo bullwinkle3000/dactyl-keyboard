@@ -35,7 +35,7 @@ The setup and run instructions are still more-or-less the same, but here's some 
 
         conda install -c conda-forge -c cadquery cadquery=master -y
 
-        pip install dataclasses-json numpy scipy solidpython
+        pip install dataclasses-json numpy scipy solidpython gitpython
 
         conda update --all -y
 
