@@ -1,18 +1,14 @@
-FROM mambaorg/micromamba:0.8.2
+FROM python:3.10.8-slim-bullseye
 
-RUN apt-get update && \
-    apt-get install -y libgl1-mesa-glx gcc bash && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt update && \
+    apt install -y git
+
+RUN pip install \
+        cadquery-ocp==7.6.3a0 \
+        git+https://github.com/CadQuery/cadquery.git \
+        dataclasses-json \
+        numpy \
+        scipy \
+        solidpython
 
 WORKDIR /app
-RUN micromamba install -y -n base -c conda-forge -c cadquery \
-    python=3 \
-    cadquery=master \
-    numpy=1 \
-    scipy=1 && \
-    (rm /opt/conda/pkgs/cache/* || true)
-
-RUN pip3 install solidpython
-
-
-WORKDIR /app/src
